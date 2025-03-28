@@ -87,7 +87,12 @@ Remove-Item "$env:USERPROFILE\.glzr\glazewm\" -Force
 # Verify symlink details
 Get-Item "$env:USERPROFILE\.wezterm.lua" | Select-Object LinkType, Target
 ```
-
+### Maybe necessary
+#### `/etc/wsl.conf` (Need to be in as root `sudo -i`) 
+```bash
+[automount]
+options = "metadata,uid=1000,gid=1000,umask=22,fmask=111"
+```
 ## 📝 Notes
 - Ensure you have the necessary permissions before running symlink and stow commands
 - Backup your existing configurations before applying these dotfiles
