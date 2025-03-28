@@ -1,0 +1,17 @@
+# Temporary files
+tmp*
+*.tmp
+*.swp
+*.swo
+*.lock
+*~
+*.bak
+*.undo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/

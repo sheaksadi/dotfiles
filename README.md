@@ -11,7 +11,7 @@ Configuration files for Linux/WSL and Windows development environment.
 
 ### 📥 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+git clone https://github.com/sheaksadi/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
