@@ -85,6 +85,7 @@ alias du='du -h'
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
+alias gcm='git commit -m'
 alias gp='git push'
 
 # ===== Quality of Life =====

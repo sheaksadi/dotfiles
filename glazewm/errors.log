@@ -1,0 +1,12 @@
+[2m2025-03-22T20:16:03.415352Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m keybindings[24].commands: unrecognized subcommand
+ at line 253 column 15
+[2m2025-03-22T20:19:56.081751Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Command doesn't have an ending `"`: '"C:\\Program Files\\WezTerm\\wezterm-gui.exe"'.
+[2m2025-03-22T20:20:11.101863Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Command doesn't have an ending `"`: '"C:\\Program Files\\WezTerm\\wezterm-gui.exe"'.
+[2m2025-03-22T20:23:08.298457Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m did not find expected ',' or ']' at line 253 column 30, while parsing a flow sequence at line 253 column 15
+[2m2025-03-22T20:23:32.308444Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m did not find expected ',' or ']' at line 253 column 30, while parsing a flow sequence at line 253 column 15
+[2m2025-03-22T20:23:48.691446Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Command doesn't have an ending `"`: '"C:\\Program Files\\WezTerm\\wezterm-gui.exe"'.
+[2m2025-03-23T04:22:41.728032Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
+[2m2025-03-24T07:49:11.082199Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
+[2m2025-03-25T06:00:50.478350Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
+[2m2025-03-27T06:48:10.245513Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
+[2m2025-03-27T06:50:57.306511Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.

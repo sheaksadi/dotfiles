@@ -1,0 +1,77 @@
+local wezterm = require("wezterm")
+local act = wezterm.action
+
+local config = wezterm.config_builder()
+
+-- Font settings
+config.font = wezterm.font("JetBrains Mono")
+-- config.font = wezterm.font("0xProto Regular")
+config.font_size = 10.0 -- Smaller font
+
+-- Terminal appearance
+config.window_background_opacity = 0.9
+config.window_decorations = "RESIZE"
+config.initial_cols = 80
+config.initial_rows = 24
+
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
+}
+
+-- Default shell (WSL)
+config.default_prog = { "wsl.exe" }
+
+-- Color scheme toggle
+wezterm.on("toggle-colorscheme", function(window, pane)
+	local overrides = window:get_config_overrides() or {}
+	if overrides.color_scheme == "Zenburn" then
+		overrides.color_scheme = "Cloud (terminal.sexy)"
+	else
+		overrides.color_scheme = "Zenburn"
+	end
+	window:set_config_overrides(overrides)
+end)
+
+-- Keybindings
+config.keys = {
+	{
+		key = "E",
+		mods = "CTRL|SHIFT|ALT",
+		action = wezterm.action.EmitEvent("toggle-colorscheme"),
+	},
+	{
+		key = "W",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.SpawnCommandInNewTab({ args = { "wsl.exe" } }),
+	},
+	{
+		key = "P",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.SpawnCommandInNewTab({ args = { "powershell.exe", "-NoLogo" } }),
+	},
+	{
+		key = "C",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			local has_selection = window:get_selection_text_for_pane(pane) ~= ""
+			if has_selection then
+				window:perform_action(act.CopyTo("Clipboard"), pane)
+			else
+				window:perform_action(act.SendKey({ key = "C", mods = "CTRL" }), pane)
+			end
+		end),
+	},
+	{
+		key = "V",
+		mods = "CTRL",
+		action = act.PasteFrom("Clipboard"),
+	},
+}
+
+-- Color scheme
+config.color_scheme = "Cloud (terminal.sexy)"
+
+return config

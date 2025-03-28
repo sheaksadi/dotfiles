@@ -1,0 +1,32 @@
+[general]
+height = 30  # Adjust height of the bar
+font = "JetBrainsMono Nerd Font 11"  # Use a nerd font for better icons
+position = "top"  # Change to "bottom" if needed
+background = "#222222CC"  # Dark translucent background
+foreground = "#FFFFFF"  # White text
+
+[modules]
+left = ["workspaces"]
+center = ["clock"]
+right = ["network", "battery", "volume"]
+
+[workspaces]
+active_color = "#88C0D0"  # Light blue for active workspace
+inactive_color = "#4C566A"  # Grey for inactive workspaces
+
+[clock]
+format = "%H:%M:%S %d-%m-%Y"  # 24-hour format with date
+
+[network]
+format = "󰤨 {ssid} {signal}%"  # Shows WiFi SSID and signal strength
+
+[battery]
+charging_symbol = "⚡"
+discharging_symbol = "🔋"
+low_color = "#BF616A"  # Red when battery is low
+medium_color = "#EBCB8B"  # Yellow for medium
+high_color = "#A3BE8C"  # Green for high battery
+
+[volume]
+symbol_muted = "󰖁"
+symbol_unmuted = "󰕾"
