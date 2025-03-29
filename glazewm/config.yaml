@@ -237,9 +237,8 @@ keybindings:
   - commands: ['wm-exit']
     bindings: ['alt+shift+e']
 
-  # Re-evaluate configuration file.
-  - commands: ['wm-reload-config']
-    bindings: ['alt+shift+r']
+  - commands: ["wm-reload-config", 'shell-exec taskkill /IM "zebar.exe" /F', "shell-exec %userprofile%/.glzr/zebar/start.bat",]
+    bindings: ["alt+shift+r"]
 
   # Redraw all windows.
   - commands: ['wm-redraw']
