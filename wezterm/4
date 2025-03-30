@@ -21,8 +21,7 @@ config.window_padding = {
 	bottom = 0,
 }
 config.skip_close_confirmation_for_processes_named =
-	{ "wsl.exe", "wslhost.exe", "pwsh.exe", "powershell.exe", "cmd.exe", "bash", "zsh", "fish", "sh" }
-config.window_close_confirmation = "NeverPrompt"
+	{ "wsl.exe", "pwsh.exe", "powershell.exe", "cmd.exe", "bash", "zsh", "fish", "sh" }
 -- Default shell (WSL)
 config.default_prog = { "wsl.exe" }
 
@@ -53,11 +52,6 @@ config.keys = {
 		key = "P",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.SpawnCommandInNewTab({ args = { "powershell.exe", "-NoLogo" } }),
-	},
-	{
-		key = "x",
-		mods = "SHIFT|CTRL",
-		action = wezterm.action.CloseCurrentTab({ confirm = false }),
 	},
 	{
 		key = "C",
