@@ -8,18 +8,23 @@ vim.opt.shiftwidth = 4 -- Number of spaces to use for each step of (auto)indent
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.smartindent = true -- Enable smart indentation
 
+-- Set fd as Telescope's default file finder
 require("telescope").setup({
   defaults = {
-    file_ignore_patterns = { "node_modules", "git", "nuxt", "dist" },
+    file_ignore_patterns = { "node_modules", "dist", ".next", ".nuxt", ".cache" },
     vimgrep_arguments = {
       "rg",
-      "--hidden",
+      "--hidden", -- Include hidden files
       "--no-heading",
       "--with-filename",
       "--line-number",
       "--column",
       "--smart-case",
-      "--glob=!node_modules/*",
+    },
+  },
+  pickers = {
+    find_files = {
+      find_command = { "fdfind", "--type", "f", "--hidden", "--no-ignore", "--exclude", "node_modules" },
     },
   },
 })

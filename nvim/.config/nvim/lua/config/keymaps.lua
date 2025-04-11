@@ -57,6 +57,14 @@ vim.keymap.set("n", "<A-Right>", ":vertical resize +5<CR>", { desc = "Increase w
 vim.keymap.set("n", "<A-Up>", ":resize +5<CR>", { desc = "Increase height" })
 vim.keymap.set("n", "<A-Down>", ":resize -5<CR>", { desc = "Decrease height" })
 
+-- Add a keybinding to open Telescope in your config directory
+vim.keymap.set("n", "<leader>fc", function()
+  require("telescope.builtin").find_files({
+    prompt_title = "< Neovim Config >",
+    cwd = "~/.config/nvim",
+  })
+end, { desc = "Find in Neovim config" })
+
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "none" })
 vim.api.nvim_set_hl(0, "CursorLineNr", { bg = "none" })
 -- Only target diagnostic virtual text highlights

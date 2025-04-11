@@ -37,7 +37,9 @@ return {
             },
           },
         },
-
+        gdscript = {
+          -- Any specific settings you want
+        },
         -- TypeScript with ts_ls
         tsserver = {
           filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" },
