@@ -190,7 +190,7 @@ setopt extended_glob
 
 # ===== TMUX Integration =====
 if [[ -z "$TMUX" ]]; then
-    cd /mnt/c/users/sheak.DESKTOP-97UOPK1/  # Your Windows home
+    cd /mnt/c/users/sheaksadi/  # Your Windows home
 fi
 
 # ===== Startup Optimizations =====

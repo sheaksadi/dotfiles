@@ -45,6 +45,8 @@ return {
 			-- [[ Configure Telescope ]]
 			-- See `:help telescope` and `:help telescope.setup()`
 			require("telescope").setup({
+
+				file_ignore_patterns = { "node_modules", "dist", ".next", ".nuxt", ".cache", ".git", ".idea" },
 				-- You can put your default mappings / updates / etc. in here
 				--  All the info you're looking for is in `:help telescope.setup()`
 				--
@@ -53,7 +55,25 @@ return {
 				--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
 				--   },
 				-- },
-				-- pickers = {}
+				pickers = {
+					find_files = {
+						find_command = {
+							"fdfind",
+							"--type",
+							"f",
+							"--hidden",
+							"--no-ignore",
+							"--exclude",
+							"node_modules",
+							"--exclude",
+							".git",
+							"--exclude",
+							".idea",
+							"--exclude",
+							"dist",
+						},
+					},
+				},
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown(),
