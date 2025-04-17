@@ -1,21 +1,50 @@
 return {
 	{
 		"goolord/alpha-nvim",
-		dependencies = { "folke/persistence.nvim" }, -- For session management
+		dependencies = { "folke/persistence.nvim" },
 		config = function()
 			local dashboard = require("alpha.themes.dashboard")
 
-			-- Check if a session exists (using persistence.nvim)
-			local function has_session()
-				return require("persistence").list() ~= nil
+			-- Check if buffer has a valid file extension
+			local function has_file_extension(buf)
+				local name = vim.api.nvim_buf_get_name(buf)
+				return name:match("%.[%w_]+%f[%z%W]$") ~= nil
 			end
 
-			-- Restore last session automatically if it exists
+			-- Clean up buffers that don't have file extensions or are special buffers
+			local function clean_buffers()
+				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+					local name = vim.api.nvim_buf_get_name(buf)
+					local is_terminal = name:match("^term://")
+					local is_empty = name == ""
+					local is_fugitive = name:match("^fugitive://")
+					local is_neo_tree = name:match("^neo%-tree")
+					local is_oil = name:match("^oil://")
+
+					if
+						not (has_file_extension(buf) or is_terminal or is_empty or is_fugitive or is_neo_tree or is_oil)
+					then
+						vim.api.nvim_buf_delete(buf, { force = true })
+					end
+				end
+			end
+
+			-- Check if a session exists
+			local function has_session()
+				local sessions = require("persistence").list()
+				return sessions and #sessions > 0
+			end
+
+			-- Initial buffer cleanup
+			clean_buffers()
+
+			-- Load session if available
 			if has_session() then
 				require("persistence").load()
+				clean_buffers()
 			end
 
-			-- Modified dashboard buttons
+			-- Dashboard buttons
 			dashboard.section.buttons.val = {
 				dashboard.button("e", "  New File", ":ene <BAR> startinsert<CR>"),
 				dashboard.button("f", "  Find File", ":Telescope find_files<CR>"),
@@ -31,22 +60,14 @@ return {
 				dashboard.button("q", "  Quit", ":qa<CR>"),
 			}
 
-			-- Optional: Display session status in the header
-			dashboard.section.header.val = {
-				" ",
-				"Neovim Dashboard",
-				" ",
-				has_session() and "󰦛  Session available (press 's' to restore)" or "󰚌  No session found",
-				" ",
-			}
-
 			require("alpha").setup(dashboard.config)
 		end,
 	},
-	-- Session management plugin
 	{
 		"folke/persistence.nvim",
 		event = "BufReadPre",
-		opts = { options = { "buffers", "curdir", "tabpages", "winsize", "help" } },
+		opts = {
+			options = { "buffers", "curdir", "tabpages", "winsize", "help" },
+		},
 	},
 }
