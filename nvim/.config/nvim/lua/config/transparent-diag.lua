@@ -39,4 +39,7 @@ vim.api.nvim_set_hl(0, "LspInlayHintUnderline", {
 	underline = true,
 	sp = "#3a3a3a", -- Underline color
 })
-
+-- Consistent ronding for boders
+vim.diagnostic.config({
+	float = { border = "rounded" },
+})

@@ -45,3 +45,14 @@ vim.keymap.set("n", "<leader>fc", function()
 		cwd = "~/.config/nvim",
 	})
 end, { desc = "Find in Neovim config" })
+
+-- Keep visual selection after shifting >
+vim.keymap.set("x", ">", ">gv", { desc = "Indent right and keep selection" })
+
+-- Keep visual selection after shifting <
+vim.keymap.set("x", "<", "<gv", { desc = "Indent left and keep selection" })
+
+-- Save with Ctrl+S in normal and insert mode
+vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file (insert mode)" })
+vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (visual mode)" })

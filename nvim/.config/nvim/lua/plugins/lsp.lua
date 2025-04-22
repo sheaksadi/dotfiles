@@ -231,7 +231,31 @@ return {
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
 				ts_ls = {
 					-- Disable ts_ls for .vue files to avoid conflicts with Volar
-					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "json" },
+					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "json", "vue" },
+					settings = {
+						typescript = {
+							inlayHints = {
+								includeInlayParameterNameHints = "all",
+								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+								includeInlayFunctionParameterTypeHints = true,
+								includeInlayVariableTypeHints = true,
+								includeInlayPropertyDeclarationTypeHints = true,
+								includeInlayFunctionLikeReturnTypeHints = true,
+								includeInlayEnumMemberValueHints = true,
+							},
+						},
+						javascript = {
+							inlayHints = {
+								includeInlayParameterNameHints = "all",
+								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+								includeInlayFunctionParameterTypeHints = true,
+								includeInlayVariableTypeHints = true,
+								includeInlayPropertyDeclarationTypeHints = true,
+								includeInlayFunctionLikeReturnTypeHints = true,
+								includeInlayEnumMemberValueHints = true,
+							},
+						},
+					},
 				},
 
 				volar = {
@@ -284,6 +308,19 @@ return {
 						},
 					},
 				},
+				sqls = {
+					filetypes = { "sql", "pgsql" },
+					settings = {
+						sqls = {
+							connections = {}, -- Empty connections array
+						},
+					},
+					on_attach = function(client, _)
+						-- Disable formatting from sqls (let null-ls handle it)
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
+					end,
+				},
 			}
 
 			-- Ensure the servers and tools above are installed
@@ -294,7 +331,7 @@ return {
 			--
 			-- You can press `g?` for help in this menu.
 			--
-			-- `mason` had to be setup earlier: to configure its options see the
+			-- `mason` had to be setup earlier: to configure its options see thelsp
 			-- `dependencies` table for `nvim-lspconfig` above.
 			--
 			-- You can add other tools here that you want Mason to install

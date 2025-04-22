@@ -29,7 +29,10 @@ return {
 						end,
 					},
 				},
-				opts = {},
+
+				opts = {
+					print,
+				},
 			},
 			"folke/lazydev.nvim",
 		},
@@ -73,7 +76,12 @@ return {
 			completion = {
 				-- By default, you may press `<c-space>` to show the documentation.
 				-- Optionally, set `auto_show = true` to show the documentation after a delay.
-				documentation = { auto_show = false, auto_show_delay_ms = 500 },
+				menu = { border = "rounded", scrollbar = false },
+				documentation = {
+					auto_show = false,
+					auto_show_delay_ms = 500,
+					window = { border = "rounded", scrollbar = false },
+				},
 			},
 
 			sources = {
@@ -95,7 +103,7 @@ return {
 			fuzzy = { implementation = "lua" },
 
 			-- Shows a signature help window while you type arguments for a function
-			signature = { enabled = true },
+			signature = { enabled = true, window = { border = "rounded", scrollbar = false } },
 		},
 	},
 }

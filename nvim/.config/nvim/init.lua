@@ -4,6 +4,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 require("config.kickstart")
+require("keymaps.kickstart")
+require("keymaps.primegen")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -32,9 +34,6 @@ require("lazy").setup({
 		icons = vim.g.have_nerd_font and {} or {},
 	},
 })
-
-require("keymaps.kickstart")
-require("keymaps.primegen")
 
 require("config.transparent-diag")
 require("config.autocmd")

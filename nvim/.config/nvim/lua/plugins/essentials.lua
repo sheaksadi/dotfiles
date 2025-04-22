@@ -72,7 +72,6 @@ return {
 		end,
 	},
 
-
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
@@ -125,6 +124,9 @@ return {
 				respect_scrolloff = false, -- Stop at scrolloff value
 				cursor_scrolls_alone = true, -- Cursor moves while scrolling
 				easing_function = "sine", -- Options: quadratic, cubic, quartic, quintic, circular, sine
+				-- post_hook = function()
+				-- 	vim.cmd("normal! zz")
+				-- end,
 			})
 		end,
 	},

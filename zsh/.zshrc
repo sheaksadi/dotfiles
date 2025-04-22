@@ -61,7 +61,8 @@ zinit light zsh-users/zsh-syntax-highlighting
 # Load zsh-autosuggestions
 zinit light zsh-users/zsh-autosuggestions
 
-
+# zinit ice depth=1
+# zinit light jeffreytse/zsh-vi-mode
 # # Basic completions (zsh-completions)
 # zinit ice blockf
 # zinit light zsh-users/zsh-completions
@@ -92,9 +93,30 @@ nzf() {
   selected=$(fzf) || return
   nvim "$selected"
 }
-#
-# Enable Vi mode
+# vi mode
 bindkey -v
+
+zle-keymap-select() {
+  if [[ $KEYMAP == vicmd ]]; then
+    echo -ne '\e[2 q'  # Steady block cursor
+  else
+    echo -ne '\e[6 q'  # Steady line cursor
+  fi
+}
+zle -N zle-keymap-select
+
+
+# Set initial cursor shape (insert mode)
+echo -ne '\e[6 q'
+
+# Reset cursor shape on exit (optional)
+precmd() { echo -ne '\e[6 q'; }
+
+# Set a low timeout for ESC key
+export KEYTIMEOUT=1
+
+
+
 
 # Configure autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -105,22 +127,7 @@ bindkey -r '^y'      # Remove existing binding
 bindkey '^y' autosuggest-accept
 
 
-# Function to display current Vi mode
-function zle-line-init zle-keymap-select {
-    case ${KEYMAP} in
-        vicmd) export VI_MODE="NORMAL" ;;
-        main|viins) export VI_MODE="INSERT" ;;
-    esac
-    
-    zle reset-prompt
-}
 
-# register the function to run on mode change
-# zle -n zle-line-init
-# zle -n zle-keymap-select
-#
-# reduce mode switch delay (optional)
-export keytimeout=1
 
 # # add this to your .zshrc
 # function zle-keymap-select {
@@ -156,6 +163,7 @@ alias l='ls -cf'
 alias ls='ls --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias cdw='cd /mnt/c/Users/sheaksadi/'
 
 # editors
 alias nv='nvim'
@@ -189,9 +197,9 @@ setopt interactive_comments
 setopt extended_glob
 
 # ===== TMUX Integration =====
-if [[ -z "$TMUX" ]]; then
-    cd /mnt/c/users/sheaksadi/  # Your Windows home
-fi
+# if [[ -z "$TMUX" ]]; then
+#     cd /mnt/c/users/sheaksadi/  # Your Windows home
+# fi
 
 # ===== Startup Optimizations =====
 # Skip compinit if compdump is recent
