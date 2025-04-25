@@ -231,7 +231,7 @@ return {
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
 				ts_ls = {
 					-- Disable ts_ls for .vue files to avoid conflicts with Volar
-					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "json", "vue" },
+					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "json" },
 					settings = {
 						typescript = {
 							inlayHints = {

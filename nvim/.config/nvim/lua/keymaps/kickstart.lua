@@ -56,3 +56,19 @@ vim.keymap.set("x", "<", "<gv", { desc = "Indent left and keep selection" })
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save file" })
 vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file (insert mode)" })
 vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (visual mode)" })
+
+-- VISUAL MODE: p (paste after) - Preserves clipboard
+vim.keymap.set("x", "p", function()
+	local clipboard_content = vim.fn.getreg("+")
+	local clipboard_type = vim.fn.getregtype("+")
+	vim.cmd('normal! "_dP') -- Delete selection, paste before (simulates 'p' in Visual mode)
+	vim.fn.setreg("+", clipboard_content, clipboard_type)
+end, { desc = "Paste after selection (keep clipboard)" })
+
+-- VISUAL MODE: P (paste before) - Preserves clipboard
+vim.keymap.set("x", "P", function()
+	local clipboard_content = vim.fn.getreg("+")
+	local clipboard_type = vim.fn.getregtype("+")
+	vim.cmd('normal! "_dp') -- Delete selection, paste after (simulates 'P' in Visual mode)
+	vim.fn.setreg("+", clipboard_content, clipboard_type)
+end, { desc = "Paste before selection (keep clipboard)" })
