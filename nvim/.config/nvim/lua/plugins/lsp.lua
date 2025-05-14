@@ -231,25 +231,19 @@ return {
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
 				ts_ls = {
 					-- Disable ts_ls for .vue files to avoid conflicts with Volar
-					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "json" },
+					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" },
+
 					settings = {
 						typescript = {
-							inlayHints = {
-								includeInlayParameterNameHints = "all",
-								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-								includeInlayFunctionParameterTypeHints = true,
-								includeInlayVariableTypeHints = true,
-								includeInlayPropertyDeclarationTypeHints = true,
-								includeInlayFunctionLikeReturnTypeHints = true,
-								includeInlayEnumMemberValueHints = true,
+							tsserver = {
+								useSyntaxServer = false,
 							},
-						},
-						javascript = {
 							inlayHints = {
 								includeInlayParameterNameHints = "all",
-								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+								includeInlayParameterNameHintsWhenArgumentMatchesName = true,
 								includeInlayFunctionParameterTypeHints = true,
 								includeInlayVariableTypeHints = true,
+								includeInlayVariableTypeHintsWhenTypeMatchesName = true,
 								includeInlayPropertyDeclarationTypeHints = true,
 								includeInlayFunctionLikeReturnTypeHints = true,
 								includeInlayEnumMemberValueHints = true,
@@ -258,6 +252,7 @@ return {
 					},
 				},
 
+				tailwindcss = {},
 				volar = {
 					filetypes = { "vue" },
 					-- Configure Volar for Vue 3 with TypeScript support

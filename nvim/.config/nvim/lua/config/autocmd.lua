@@ -20,7 +20,18 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		end
 	end,
 })
-
+-- Set up LSP keymap for quick actions
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		-- Just the essential code action keybind
+		vim.keymap.set(
+			{ "n", "v" }, -- Normal and Visual modes
+			"<leader>a", -- Your quick action key
+			vim.lsp.buf.code_action, -- The action to trigger
+			{ buffer = args.buf, desc = "LSP: Quick actions" }
+		)
+	end,
+})
 -- -- Close directory buffer on startup to allow alpha to show
 -- vim.api.nvim_create_autocmd("VimEnter", {
 -- 	callback = function()

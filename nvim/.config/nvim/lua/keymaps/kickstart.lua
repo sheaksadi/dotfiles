@@ -72,3 +72,5 @@ vim.keymap.set("x", "P", function()
 	vim.cmd('normal! "_dp') -- Delete selection, paste after (simulates 'P' in Visual mode)
 	vim.fn.setreg("+", clipboard_content, clipboard_type)
 end, { desc = "Paste before selection (keep clipboard)" })
+
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[R]e[n]ame" })

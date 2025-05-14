@@ -71,6 +71,9 @@ return {
 							".idea",
 							"--exclude",
 							"dist",
+
+							"--exclude",
+							".nuxt",
 						},
 					},
 				},

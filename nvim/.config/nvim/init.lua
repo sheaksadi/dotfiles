@@ -39,3 +39,5 @@ require("config.transparent-diag")
 require("config.autocmd")
 
 require("utils.log").setup()
+require("utils.sync").setup()
+require("utils.snippets")

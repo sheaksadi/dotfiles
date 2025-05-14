@@ -1,5 +1,3 @@
--- ~/.config/nvim/lua/utils/M.lua
-
 local M = {} -- Create a module table
 
 -- Helper to get Esc termcode - defined once
@@ -85,6 +83,7 @@ function M.setup_log_macro(config)
 		end,
 	})
 end
+
 function M.setup()
 	-- Setup for JavaScript and TypeScript (and React variants)
 	M.setup_log_macro({
@@ -101,6 +100,15 @@ function M.setup()
 		register = "l", -- Can use the same register, will be set based on filetype
 		prefix = 'fmt.Println("',
 		separator = ':", ',
+		suffix = ")",
+	})
+
+	-- Setup for Lua - CORRECTED VERSION WITHOUT COMMA
+	M.setup_log_macro({
+		filetypes = { "lua" },
+		register = "l", -- Can use the same register, will be set based on filetype
+		prefix = 'print("',
+		separator = ':" .. ', -- Use Lua string concatenation instead of comma
 		suffix = ")",
 	})
 
@@ -124,4 +132,5 @@ function M.setup()
 		-- Macro will produce: println!("yanked_var: {:?}", yanked_var);
 	})
 end
+
 return M -- Return the module table containing the function
