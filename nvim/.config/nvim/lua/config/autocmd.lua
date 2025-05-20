@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Just the essential code action keybind
 		vim.keymap.set(
 			{ "n", "v" }, -- Normal and Visual modes
-			"<leader>a", -- Your quick action key
+			"<leader>ca", -- Your quick action key
 			vim.lsp.buf.code_action, -- The action to trigger
 			{ buffer = args.buf, desc = "LSP: Quick actions" }
 		)

@@ -7,6 +7,7 @@ require("config.kickstart")
 require("keymaps.kickstart")
 require("keymaps.primegen")
 
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -41,3 +42,4 @@ require("config.autocmd")
 require("utils.log").setup()
 require("utils.sync").setup()
 require("utils.snippets")
+require("keymaps.harpoon")

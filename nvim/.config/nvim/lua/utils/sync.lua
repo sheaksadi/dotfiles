@@ -6,6 +6,7 @@ M.paths = {
 	["/mnt/c/users/sheaksadi/WebstormProjects/pubg_scoreboard/"] = "sheaksadi@deadhorse.net:~/pubg_test/pubg_scoreboard/",
 	["/mnt/c/users/sheaksadi/WebstormProjects/jobot/"] = "sheaksadi@deadhorse.net:~/jobot/",
 	["/mnt/c/users/sheaksadi/GolandProjects/mm-backend/"] = "sheaksadi@deadhorse.net:~/mm-backend/",
+	["~/js-projects/mm-frontend/"] = "sheaksadi@deadhorse.net:~/mm-frontend/",
 }
 
 -- Define excluded folders
