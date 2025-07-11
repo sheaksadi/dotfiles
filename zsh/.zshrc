@@ -16,6 +16,9 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 
 
+
+
+
 # ===== Core Configuration =====
 # History key bindings
 bindkey '^p' history-search-backward  # Ctrl+P to search backward
@@ -115,9 +118,6 @@ precmd() { echo -ne '\e[6 q'; }
 # Set a low timeout for ESC key
 export KEYTIMEOUT=1
 
-
-
-
 # Configure autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=1
@@ -126,7 +126,12 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 bindkey -r '^y'      # Remove existing binding
 bindkey '^y' autosuggest-accept
 
-
+bindkey -r '^f'      # Remove existing binding
+function _run_tmux_sessionizer() {
+    ~/.config/tmux/tmux-sessionizer.sh
+}
+zle -N _run_tmux_sessionizer
+bindkey '^F' _run_tmux_sessionizer
 
 
 # # add this to your .zshrc
@@ -246,3 +251,5 @@ export PATH=$PATH:$(go env GOPATH)/bin
 
 
 eval "$(zoxide init --cmd cd zsh)"  
+
+

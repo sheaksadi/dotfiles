@@ -28,16 +28,16 @@ end, { desc = "Harpoon: Next mark" })
 
 vim.keymap.set("n", "<C-h>", function()
 	harpoon:list():select(1)
-end)
+end, { desc = "Harpoon: Jump to mark 1" })
 vim.keymap.set("n", "<C-j>", function()
 	harpoon:list():select(2)
-end)
+end, { desc = "Harpoon: Jump to mark 2" })
 vim.keymap.set("n", "<C-k>", function()
 	harpoon:list():select(3)
-end)
+end, { desc = "Harpoon: Jump to mark 3" })
 vim.keymap.set("n", "<C-l>", function()
 	harpoon:list():select(4)
-end)
+end, { desc = "Harpoon: Jump to mark 4" })
 
 -- basic telescope configuration
 local conf = require("telescope.config").values
@@ -64,8 +64,6 @@ vim.keymap.set("n", "<C-e>", function()
 end, { desc = "Open harpoon window" })
 
 -- Remove current buffer from Harpoon list
-vim.keymap.set("n", "<leader>hr", function()
-	local harpoon = require("harpoon")
-	local current_file = vim.api.nvim_buf_get_name(0) -- gets current file path
-	harpoon:list():remove(current_file)
+vim.keymap.set("n", "<leader>hx", function()
+	harpoon:list():remove()
 end, { desc = "Harpoon: Remove current buffer" })
