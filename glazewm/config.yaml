@@ -121,41 +121,48 @@ window_behavior:
 
 workspaces:
   - name: '1'
+    bind_to_monitor: 1
   - name: '2'
+    bind_to_monitor: 1
   - name: '3'
+    bind_to_monitor: 0
   - name: '4'
+    bind_to_monitor: 0
   - name: '5'
   - name: '6'
   - name: '7'
   - name: '8'
   - name: '9'
 
-# Autostart apps
-autostart:
-  - { command: 'firefox.exe' }       # Firefox
-  - { command: 'wezterm.exe' }       # WezTerm
-  - { command: 'discord.exe' }       # Discord
+
+# autostart:
+#   - { command: 'firefox.exe' }       # Firefox
+#   - { command: 'wezterm.exe' }       # WezTerm
+#   - { command: 'discord.exe' }       # Discord
+#   - { command: 'librewolf.exe' }       # Discord
 
 
 
 window_rules:
-# Firefox → Workspace 1
-  - commands: ['move --workspace 1']
-    match:
-      - window_process: { equals: 'firefox.exe' }
-      - window_class: { equals: 'MozillaWindowClass' }
-
-  # WezTerm → Workspace 2
-  # - commands: ['move --workspace 2']
-  #   match:
-  #     - window_process: { equals: 'wezterm.exe' }
-  #     - window_class: { equals: 'WezTerm' }  # Verify with `glazewm logs` if needed
-  #
-  # Discord → Workspace 3
-  - commands: ['move --workspace 3']
-    match:
-      - window_process: { equals: 'discord.exe' }
-      - window_class: { regex: 'Chrome_WidgetWin_1' }  # Discord uses Electron (Chrome)
+  # LibreWolf → Workspace 1
+  - commands: ['move --workspace 1']
+    match:
+      - window_process: { regex: '(?i)librewolf' }
+  
+  # WezTerm → Workspace 2
+  - commands: ['move --workspace 2']
+    match:
+      - window_process: { regex: '(?i)wezterm' }
+  
+  # Discord → Workspace 3
+  - commands: ['move --workspace 3']
+    match:
+      - window_process: { regex: '(?i)discord' }
+  
+  # Firefox → Workspace 4
+  - commands: ['move --workspace 4']
+    match:
+      - window_process: { regex: '(?i)firefox' }
   - commands: ['ignore']
     match:
       # Ignores any Zebar windows.

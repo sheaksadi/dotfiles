@@ -42,3 +42,8 @@
 [2m2025-04-05T19:46:20.128349Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Invalid window handle. (0x80070578)
 [2m2025-04-06T17:47:41.196149Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
 [2m2025-04-07T01:25:36.324833Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m Another instance of the application is already running.
+[2m2025-07-11T09:13:53.298880Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m could not find expected ':' at line 138 column 1, while scanning a simple key at line 137 column 1
+[2m2025-07-11T09:14:18.299121Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m could not find expected ':' at line 138 column 1, while scanning a simple key at line 137 column 1
+[2m2025-07-11T09:15:04.911659Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m could not find expected ':' at line 138 column 1, while scanning a simple key at line 137 column 1
+[2m2025-07-11T09:15:26.709136Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m could not find expected ':' at line 138 column 1, while scanning a simple key at line 137 column 1
+[2m2025-07-11T10:11:30.375432Z[0m [31mERROR[0m [2mglazewm[0m[2m:[0m window_rules[3]: duplicate field `match` at line 175 column 5
