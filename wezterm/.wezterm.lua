@@ -5,7 +5,6 @@ local config = wezterm.config_builder()
 
 -- Font settings
 config.font = wezterm.font("JetBrains Mono")
--- config.font = wezterm.font("0xProto Regular")
 config.font_size = 10.0 -- Smaller font
 
 -- Terminal appearance
@@ -13,11 +12,12 @@ config.window_background_opacity = 0.9
 config.window_decorations = "RESIZE"
 config.initial_cols = 80
 config.initial_rows = 24
+config.hide_tab_bar_if_only_one_tab = true -- Add this line
 
 config.window_padding = {
 	left = 0,
 	right = 0,
-	top = 0,
+	top = 6,
 	bottom = 0,
 }
 config.skip_close_confirmation_for_processes_named =
@@ -60,7 +60,12 @@ config.keys = {
 		action = wezterm.action.CloseCurrentTab({ confirm = false }),
 	},
 	{
-		key = "C",
+		key = "r",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.ReloadConfiguration,
+	},
+	{
+		key = "c",
 		mods = "CTRL",
 		action = wezterm.action_callback(function(window, pane)
 			local has_selection = window:get_selection_text_for_pane(pane) ~= ""
@@ -72,7 +77,7 @@ config.keys = {
 		end),
 	},
 	{
-		key = "V",
+		key = "v",
 		mods = "CTRL",
 		action = act.PasteFrom("Clipboard"),
 	},

@@ -16,3 +16,17 @@ Thumbs.db
 .idea/
 .vscode/
 tmux/.config/tmux/plugins/
+
+# Ignore unimportant or generated files
+*.log
+*.lock
+*.exe
+*.bak
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+node_modules/
+scripts/glazeControl/node_modules/
+*.zebar.json
+package-lock.json
