@@ -30,6 +30,21 @@ return {
 					},
 				},
 
+				keys = {
+					{
+						"<C-f>",
+						function()
+							local ls = require("luasnip")
+							if ls.expand_or_jumpable() then
+								ls.expand_or_jump()
+							end
+						end,
+						mode = { "i", "s" },
+						silent = true,
+						desc = "Snippet: Jump Forward",
+					},
+				},
+
 				opts = {
 					print,
 				},
@@ -74,21 +89,14 @@ return {
 				nerd_font_variant = "mono",
 			},
 
-			completion = {
-				-- By default, you may press `<c-space>` to show the documentation.
-				-- Optionally, set `auto_show = true` to show the documentation after a delay.
-				menu = { border = "rounded", scrollbar = false },
-				documentation = {
-					auto_show = false,
-					auto_show_delay_ms = 500,
-					window = { border = "rounded", scrollbar = false },
-				},
-			},
-
 			sources = {
-				default = { "lsp", "path", "snippets", "lazydev" },
+				default = { "lsp", "buffer", "path", "lazydev", "snippets" },
 				providers = {
-					lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+					lsp = { score_offset = 10 },
+					snippets = { score_offset = 1, min_keyword_length = 2 },
+					buffer = { score_offset = 1 },
+					path = { score_offset = 1 },
+					lazydev = { module = "lazydev.integrations.blink", score_offset = 1 },
 				},
 			},
 
