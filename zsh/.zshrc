@@ -127,7 +127,11 @@ bindkey -r '^y'      # Remove existing binding
 bindkey '^y' autosuggest-accept
 
 
+# Unbind Ctrl+F first (in case it's bound to something else)
+bindkey -r '^F'
 
+# Bind Ctrl+F to run your tmux sessionizer script
+bindkey -s '^F' '~/.config/tmux/tmux-sessionizer.sh\n'
 
 # # add this to your .zshrc
 # function zle-keymap-select {
