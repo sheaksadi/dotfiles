@@ -61,7 +61,9 @@ vim.opt.splitbelow = true
 vim.o.expandtab = true -- Converts tabs to spaces
 vim.o.tabstop = 4 -- Number of spaces that a <Tab> in the file counts for
 vim.o.shiftwidth = 4 -- Number of spaces to use for each step of (auto)indent
-vim.o.softtabstop = 4 -- Number of spaces that a <Tab> counts for while performing editing operations
+nvim.o.softtabstop = 4 -- Number of spaces that a <Tab> counts for while performing editing operations
+vim.o.autoindent = true
+vim.opt.smartindent = true
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
