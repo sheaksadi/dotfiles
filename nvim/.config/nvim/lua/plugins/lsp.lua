@@ -230,7 +230,7 @@ return {
 				--
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
 				ts_ls = {
-					-- Disable ts_ls for .vue files to avoid conflicts with Volar
+					-- Disable ts_ls for .vue files to avoid conflicts with vue-language-server
 					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" },
 
 					settings = {
@@ -253,41 +253,41 @@ return {
 				},
 
 				tailwindcss = {},
-				volar = {
-					filetypes = { "vue" },
-					-- Configure Volar for Vue 3 with TypeScript support
-					init_options = {
-						vue = {
-							hybridMode = false, -- Use full TS support
-						},
-						typescript = {
-							tsdk = vim.fn.expand(
-								"$HOME/.local/share/nvim/mason/packages/typescript-language-server/node_modules/typescript/lib"
-							),
-							-- Alternatively use the global TypeScript:
-							-- tsdk = vim.fn.expand("$HOME/.npm-global/lib/node_modules/typescript/lib")
-						},
-					},
-					settings = {
-						volar = {
-							codeLens = {
-								references = true,
-								pugTools = true,
-								scriptSetupTools = true,
-							},
-							completion = {
-								autoImportComponent = true,
-								preferredTagNameCase = "pascal",
-							},
-							diagnostics = {
-								templateChecking = true,
-							},
-							takeOverMode = {
-								enabled = true, -- This enables Volar to take over TypeScript LSP for .vue files
-							},
-						},
-					},
-				},
+				-- vue-language-server = {
+				-- 	filetypes = { "vue" },
+				-- 	-- Configure vue-language-server for Vue 3 with TypeScript support
+				-- 	init_options = {
+				-- 		vue = {
+				-- 			hybridMode = false, -- Use full TS support
+				-- 		},
+				-- 		typescript = {
+				-- 			tsdk = vim.fn.expand(
+				-- 				"$HOME/.local/share/nvim/mason/packages/typescript-language-server/node_modules/typescript/lib"
+				-- 			),
+				-- 			-- Alternatively use the global TypeScript:
+				-- 			-- tsdk = vim.fn.expand("$HOME/.npm-global/lib/node_modules/typescript/lib")
+				-- 		},
+				-- 	},
+				-- 	settings = {
+				-- 		vue = {
+				-- 			codeLens = {
+				-- 				references = true,
+				-- 				pugTools = true,
+				-- 				scriptSetupTools = true,
+				-- 			},
+				-- 			completion = {
+				-- 				autoImportComponent = true,
+				-- 				preferredTagNameCase = "pascal",
+				-- 			},
+				-- 			diagnostics = {
+				-- 				templateChecking = true,
+				-- 			},
+				-- 			takeOverMode = {
+				-- 				enabled = true, -- This enables vue-language-server to take over TypeScript LSP for .vue files
+				-- 			},
+				-- 		},
+				-- 	},
+				-- },
 
 				lua_ls = {
 					-- cmd = { ... },

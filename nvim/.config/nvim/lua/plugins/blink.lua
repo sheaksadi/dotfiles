@@ -8,6 +8,7 @@ return {
 			-- Snippet Engine
 			{
 				"L3MON4D3/LuaSnip",
+
 				version = "2.*",
 				build = (function()
 					-- Build Step is needed for regex support in snippets.
@@ -25,11 +26,39 @@ return {
 					{
 						"rafamadriz/friendly-snippets",
 						config = function()
-							require("luasnip.loaders.from_vscode").lazy_load()
+							-- will exclude all javascript snippets
+							require("luasnip.loaders.from_vscode").load({
+								-- exclude = { "javascript", "typescript" },
+							})
 						end,
 					},
 				},
+				config = function()
+					local ls = require("luasnip")
+					-- ls.filetype_extend("typescript", { "javascript" })
+					ls.config.set_config({
+						history = true,
+						updateevents = "TextChanged,TextChangedI",
+						enable_autosnippets = true,
+					})
 
+					vim.keymap.set({ "i" }, "<C-K>", function()
+						ls.expand()
+					end, { silent = true })
+					vim.keymap.set({ "i", "s" }, "<C-J>", function()
+						ls.jump(1)
+					end, { silent = true })
+					vim.keymap.set({ "i", "s" }, "<C-H>", function()
+						ls.jump(-1)
+					end, { silent = true })
+
+					vim.keymap.set({ "i", "s" }, "<C-L>", function()
+						if ls.choice_active() then
+							ls.change_choice(1)
+						end
+					end, { silent = true })
+					vim.keymap.set("n", "<leader>ns", "<cmd>source ~/.config/nvim/lua/utils/snippets.lua<CR>")
+				end,
 				keys = {
 					{
 						"<C-f>",
