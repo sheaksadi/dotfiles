@@ -28,7 +28,7 @@ return {
 						config = function()
 							-- will exclude all javascript snippets
 							require("luasnip.loaders.from_vscode").load({
-								-- exclude = { "javascript", "typescript" },
+								exclude = { "javascript", "typescript" },
 							})
 						end,
 					},
@@ -37,7 +37,7 @@ return {
 					local ls = require("luasnip")
 					-- ls.filetype_extend("typescript", { "javascript" })
 					ls.config.set_config({
-						history = true,
+						-- history = true,
 						updateevents = "TextChanged,TextChangedI",
 						enable_autosnippets = true,
 					})

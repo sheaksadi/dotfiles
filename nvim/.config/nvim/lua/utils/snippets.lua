@@ -10,13 +10,21 @@ local c = ls.choice_node
 local pluralize = require("utils.pluralize")
 
 local function singular_dynamic(args)
-	local plural = args[1][1]
+	local plural = args[1][1] or ""
 
-	local new_plural, count = string.gsub(plural, "this.", "")
+	local base = ""
+	local word_to_singularize = plural
 
-	local singular = pluralize.singular(new_plural)
+	local matched_base, last_word = string.match(plural, "(.*[.])([^.]+)$")
 
-	if singular == new_plural then
+	if matched_base then
+		base = matched_base -- e.g., "this.a.b."
+		word_to_singularize = last_word -- e.g., "c"
+	end
+
+	local singular = pluralize.singular(word_to_singularize)
+
+	if singular == word_to_singularize then
 		singular = singular .. "_val"
 	end
 
@@ -120,15 +128,16 @@ local imp = {
 }
 local function create_log_label(args)
 	local text = args[1][1] or ""
-	return sn(nil, t('"' .. text .. ': ", '))
+	return sn(nil, { t('"'), i(1, text), t(': ", ') })
 end
 
 local cl_body = {
 	t("console.log("),
-	d(2, create_log_label, { 1 }),
-	i(1, "value"),
+	c(1, {
+		sn(nil, { d(2, create_log_label, { 1 }), i(1, "value") }),
+		i(1, "value"),
+	}),
 	t(");"),
-	i(0),
 }
 local class_body = {
 	t("class "),
@@ -250,16 +259,18 @@ local function is_in_parens()
 	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 	local line_content = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
 
-	-- Get only the text on the line before the cursor
+	-- Get the text on the line up to the cursor's position
 	local text_before_cursor = line_content:sub(1, col)
 
-	-- A simple heuristic: if there are more open parens than closed ones
-	-- before the cursor, we are likely inside a function call.
-	local open_count = select(2, text_before_cursor:gsub("%(", ""))
-	local close_count = select(2, text_before_cursor:gsub("%)", ""))
+	-- Trim any trailing whitespace from the text before the cursor
+	local trimmed_text_before = text_before_cursor:gsub("%s*$", "")
 
-	return open_count > close_count
+	-- Return true ONLY if the last non-whitespace character is an open parenthesis.
+	-- This is a much more reliable way to detect if we are starting a
+	-- new function call or inline arrow function.
+	return trimmed_text_before:sub(-1) == "("
 end
+
 local lfun = {
 	-- This dynamic node ONLY builds the signature before the "=>".
 	d(1, function()
@@ -275,8 +286,7 @@ local lfun = {
 				signature_body = {
 					t("("),
 					c(1, { sn(nil, { i(1, "args"), t(": "), i(2, "any") }), t("") }),
-					t("): "),
-					i(2, "void"), -- Added the missing return type placeholder
+					t(")"),
 				}
 			else
 				-- Full const declaration signature with a better default return type
@@ -320,6 +330,114 @@ local lfun = {
 	i(0), -- The final cursor position is now correctly placed after "return ".
 	t({ "", "}" }),
 }
+local try_catch = {
+	t("try {"),
+	t({ "", "\t" }),
+	i(2),
+	t({ "", "} catch (" }),
+	i(1, "error"), -- Editable error name
+	t({ ") {", "\t" }),
+	i(0),
+	t({ "", "}" }),
+}
+
+-- 2. try...finally block
+local try_finally = {
+	t("try {"),
+	t({ "", "\t" }),
+	i(1),
+	t({ "", "} finally {", "\t" }),
+	i(0),
+	t({ "", "}" }),
+}
+
+-- 3. try...catch...finally block
+local try_catch_finally = {
+	t("try {"),
+	t({ "", "\t" }),
+	i(2),
+	t({ "", "} catch (" }),
+	i(1, "error"), -- Editable error name
+	t({ ") {", "\t" }),
+	i(3),
+	t({ "", "} finally {", "\t" }),
+	i(0),
+	t({ "", "}" }),
+}
+
+-- 4. setTimeout function
+local set_timeout = {
+	t("setTimeout(() => {"),
+	t({ "", "\t" }),
+	i(1),
+	t({ "", "}, " }),
+	i(2, "1000"),
+	t(");"),
+	i(0),
+}
+
+-- 5. setInterval function
+local set_interval = {
+	t("setInterval(() => {"),
+	t({ "", "\t" }),
+	i(1),
+	t({ "", "}, " }),
+	i(2, "1000"),
+	t(");"),
+	i(0),
+}
+
+-- 6. Promise creation
+local new_promise = {
+	t("new Promise((resolve, reject) => {"),
+	t({ "", "\t" }),
+	i(1),
+	t({ "", "});" }),
+	i(0),
+}
+
+-- 7. async/await fetch
+local async_fetch = {
+	t("async function "),
+	i(1, "getData"),
+	t("("),
+	i(2),
+	t(")"),
+	-- Dynamically add return type for TS
+	d(3, function()
+		local ft = vim.bo.filetype
+		if ft == "typescript" or ft == "typescriptreact" or ft == "vue" then
+			return sn(nil, t(": Promise<void>"))
+		else
+			return sn(nil, t(""))
+		end
+	end, {}),
+	t({ " {", "\t" }),
+	t("try {"),
+	t({ "", "\t\t" }),
+	t("const response = await fetch("),
+	i(4, "url"),
+	t({ ");", "\t\t" }),
+	t("const data = await response.json();"),
+	t({ "", "\t\t" }),
+	i(5),
+	t({ "", "\t} catch (" }),
+	i(6, "error"), -- Editable error name
+	t({ ") {", "\t\t" }),
+	t("console.error("),
+	i(0),
+	t({ ");", "\t}" }),
+	t({ "", "}" }),
+}
+
+-- TypeScript 'type' alias
+local type_alias = {
+	t("type "),
+	i(1, "Name"),
+	t(" = "),
+	i(0),
+	t(";"),
+}
 
 local jsSnippets = {
 	s("fo", forof),
@@ -331,9 +449,19 @@ local jsSnippets = {
 	s("ife", ife),
 	s("imp", imp),
 	s("cl", cl_body),
+	s("log", cl_body),
 	s("cls", class_body),
 	s("func", func_body),
 	s("funl", lfun),
+
+	s("try", try_catch),
+	s("tryf", try_finally),
+	s("trycf", try_catch_finally),
+	s("sto", set_timeout),
+	s("siv", set_interval),
+	s("prom", new_promise),
+	s("fetch", async_fetch),
+	s("type", type_alias),
 }
 ls.add_snippets("javascript", jsSnippets)
 ls.add_snippets("typescript", jsSnippets)
