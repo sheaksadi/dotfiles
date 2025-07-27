@@ -54,7 +54,7 @@ vim.keymap.set("x", "<", "<gv", { desc = "Indent left and keep selection" })
 
 -- Save with Ctrl+S in normal and insert mode
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save file" })
-vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file (insert mode)" })
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR><Esc>", { desc = "Save file (insert mode)" })
 vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (visual mode)" })
 
 -- VISUAL MODE: p (paste after) - Preserves clipboard
@@ -128,100 +128,98 @@ vim.keymap.set("n", "<A-Right>", ":vertical resize +5<CR>", { desc = "Increase w
 vim.keymap.set("n", "<A-Up>", ":resize +5<CR>", { desc = "Increase height" })
 vim.keymap.set("n", "<A-Down>", ":resize -5<CR>", { desc = "Decrease height" })
 -- Keymaps from essentials.lua
-vim.keymap.set("n", "<leader>f", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, { desc = "[F]ormat buffer" })
+vim.keymap.set("n", "<leader>f", function()
+	require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "[F]ormat buffer" })
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 map("n", "<S-H>", "<cmd>BufferLineCyclePrev<cr>", opts)
 map("n", "<S-L>", "<cmd>BufferLineCycleNext<cr>", opts)
 
-
 -- Keymaps from gitsigns.lua
 do
-  local gs = package.loaded.gitsigns
+	local gs = package.loaded.gitsigns
 
-  local function map(mode, l, r, opts)
-    opts = opts or {}
-    opts.buffer = bufnr
-    vim.keymap.set(mode, l, r, opts)
-  end
+	local function map(mode, l, r, opts)
+		opts = opts or {}
+		opts.buffer = bufnr
+		vim.keymap.set(mode, l, r, opts)
+	end
 
-  -- Navigation
-  map("n", "]c", function()
-    if vim.wo.diff then
-      return "]c"
-    end
-    vim.schedule(function()
-      gs.next_hunk()
-    end)
-    return "<Ignore>"
-  end, { expr = true, desc = "Next hunk" })
+	-- Navigation
+	map("n", "]c", function()
+		if vim.wo.diff then
+			return "]c"
+		end
+		vim.schedule(function()
+			gs.next_hunk()
+		end)
+		return "<Ignore>"
+	end, { expr = true, desc = "Next hunk" })
 
-  map("n", "[c", function()
-    if vim.wo.diff then
-      return "[c"
-    end
-    vim.schedule(function()
-      gs.prev_hunk()
-    end)
-    return "<Ignore>"
-  end, { expr = true, desc = "Previous hunk" })
+	map("n", "[c", function()
+		if vim.wo.diff then
+			return "[c"
+		end
+		vim.schedule(function()
+			gs.prev_hunk()
+		end)
+		return "<Ignore>"
+	end, { expr = true, desc = "Previous hunk" })
 
-  -- Actions
-  map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
-  map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
-  map("v", "<leader>hs", function()
-    gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-  end, { desc = "Stage selected hunk" })
-  map("v", "<leader>hr", function()
-    gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-  end, { desc = "Reset selected hunk" })
-  map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
-  map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
-  map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
-  map("n", "<leader>hi", gs.preview_hunk_inline, { desc = "Preview hunk inline" })
-  map("n", "<leader>hb", function()
-    gs.blame_line({ full = true })
-  end, { desc = "Blame line" })
-  map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
-  map("n", "<leader>hD", function()
-    gs.diffthis("~")
-  end, { desc = "Diff against last commit" })
-  map("n", "<leader>hq", gs.setqflist, { desc = "Send hunks to quickfix" })
+	-- Actions
+	map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+	map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
+	map("v", "<leader>hs", function()
+		gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+	end, { desc = "Stage selected hunk" })
+	map("v", "<leader>hr", function()
+		gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+	end, { desc = "Reset selected hunk" })
+	map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+	map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+	map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+	map("n", "<leader>hi", gs.preview_hunk_inline, { desc = "Preview hunk inline" })
+	map("n", "<leader>hb", function()
+		gs.blame_line({ full = true })
+	end, { desc = "Blame line" })
+	map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
+	map("n", "<leader>hD", function()
+		gs.diffthis("~")
+	end, { desc = "Diff against last commit" })
+	map("n", "<leader>hq", gs.setqflist, { desc = "Send hunks to quickfix" })
 
-  -- Toggles
-  map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
-  map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle deleted" })
-  map("n", "<leader>tw", gs.toggle_word_diff, { desc = "Toggle word diff" })
-  map("n", "<leader>tl", gs.toggle_linehl, { desc = "Toggle line highlight" })
+	-- Toggles
+	map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
+	map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle deleted" })
+	map("n", "<leader>tw", gs.toggle_word_diff, { desc = "Toggle word diff" })
+	map("n", "<leader>tl", gs.toggle_linehl, { desc = "Toggle line highlight" })
 
-  -- Text object
-  map({ "o", "x" }, "ih", gs.select_hunk, { desc = "Select hunk" })
+	-- Text object
+	map({ "o", "x" }, "ih", gs.select_hunk, { desc = "Select hunk" })
 end
-
 
 -- Keymaps from oil.lua
 vim.keymap.set("n", "<leader>e", function()
-  local oil = require("oil")
-  if oil.get_current_dir() then
-    oil.close()
-  else
-    oil.open_float()
-  end
+	local oil = require("oil")
+	if oil.get_current_dir() then
+		oil.close()
+	else
+		oil.open_float()
+	end
 end, { desc = "File Explorer (Oil)" })
 
 vim.keymap.set("n", "<c-s>", function()
-  local oil = require("oil")
-  if oil.get_current_dir() then
-    oil.save()
-  else
-    vim.cmd("w")
-  end
-end, { desc = "File Explorer (Oil)" })
-
+	local oil = require("oil")
+	if oil.get_current_dir() then
+		oil.save()
+	else
+		vim.cmd("w")
+	end
+end, { desc = "File Explorer save (Oil)" })
 
 -- Keymaps from tabout.lua
 vim.keymap.set("i", "<C-l>", "<Tab>", { noremap = true })
-
 
 -- Keymaps from tmux-nav.lua
 vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", { desc = "Navigate left" })
@@ -230,13 +228,5 @@ vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { desc = "Navigate up" }
 vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { desc = "Navigate right" })
 vim.keymap.set("n", "<C-\\>", "<cmd>TmuxNavigatePrevious<CR>", { desc = "Navigate previous" })
 
-
 -- Keymaps from undo-tree.lua
 vim.keymap.set("n", "<F5>", vim.cmd.UndotreeToggle)
-
-
-
-
-
-
-
