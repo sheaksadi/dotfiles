@@ -307,7 +307,18 @@ return {
 					filetypes = { "sql", "pgsql" },
 					settings = {
 						sqls = {
-							connections = {}, -- Empty connections array
+							connections = {
+								-- Example for PostgreSQL:
+								-- {
+								--   driver = "postgresql",
+								--   dataSourceName = "host=localhost port=5432 user=postgres password=password dbname=postgres sslmode=disable",
+								-- },
+								-- Example for MySQL:
+								-- {
+								--   driver = "mysql",
+								--   dataSourceName = "user:password@tcp(localhost:3306)/dbname",
+								-- }
+							},
 						},
 					},
 					on_attach = function(client, _)
@@ -334,6 +345,7 @@ return {
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"sqls",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
