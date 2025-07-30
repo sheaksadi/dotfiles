@@ -41,5 +41,7 @@ require("config.indent_mapping")
 
 require("utils.log").setup()
 require("utils.sync").setup()
+require("utils.autosave").setup()
+
 require("utils.snippets")
 require("keymaps.harpoon")
