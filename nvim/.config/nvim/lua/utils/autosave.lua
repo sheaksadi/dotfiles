@@ -2,19 +2,23 @@ local M = {}
 
 -- Default configuration
 local config = {
-	timeout = 15000, -- 30 seconds in milliseconds
+	timeout = 15000, -- 15 seconds in milliseconds
 	enabled = true,
-	events = { "InsertLeave", "TextChanged" },
+	events = { "TextChanged", "TextChangedI", "InsertLeave" },
 	save_on_focus_lost = true,
 	exclude_filetypes = { "help", "alpha", "dashboard", "NvimTree", "Trouble", "lazy" },
 	exclude_buftypes = { "nofile", "prompt", "popup" },
 	only_save_existing_files = true, -- Only save files that already exist on disk
 	notify = true, -- Show notification when auto-saving
 	keybind = "<leader>as", -- Keybind for toggle (set to false to disable)
+	debounce_delay = 1000, -- Debounce delay in milliseconds (1 second)
 }
 
 -- Timer storage for each buffer
 local timers = {}
+
+-- Debounce tracking: stores last event time for each buffer
+local last_event_time = {}
 
 -- Check if buffer should be auto-saved
 local function should_autosave(bufnr)
@@ -121,11 +125,23 @@ end
 local function on_buffer_activity()
 	local bufnr = vim.api.nvim_get_current_buf()
 
-	if should_autosave(bufnr) then
-		start_timer(bufnr)
-	else
+	if not should_autosave(bufnr) then
 		stop_timer(bufnr)
+		return
 	end
+
+	-- Debounce check
+	local current_time = vim.loop.hrtime() / 1000000 -- Convert to milliseconds
+	local last_time = last_event_time[bufnr] or 0
+
+	if current_time - last_time < config.debounce_delay then
+		-- Too soon since last event, skip this one
+		return
+	end
+
+	-- Update last event time and start/restart timer
+	last_event_time[bufnr] = current_time
+	start_timer(bufnr)
 end
 
 -- Clean up timers for deleted buffers
@@ -135,6 +151,7 @@ local function cleanup_timers()
 			timer:stop()
 			timer:close()
 			timers[bufnr] = nil
+			last_event_time[bufnr] = nil -- Clean up debounce tracking too
 		end
 	end
 end
@@ -170,9 +187,20 @@ local function setup_autocmds()
 		group = group,
 		callback = function(args)
 			stop_timer(args.buf)
+			last_event_time[args.buf] = nil -- Clean up debounce tracking
 		end,
 	})
-
+	-- Stop timer on manual save
+	vim.api.nvim_create_autocmd("BufWritePost", {
+		group = group,
+		callback = function(args)
+			-- Only act on the buffer that was just saved
+			if args.buf == vim.api.nvim_get_current_buf() then
+				stop_timer(args.buf)
+				last_event_time[args.buf] = nil -- Clean up debounce tracking
+			end
+		end,
+	})
 	-- Periodic cleanup
 	vim.api.nvim_create_autocmd("VimResized", {
 		group = group,
@@ -210,11 +238,12 @@ M.setup = function(opts)
 			vim.notify("AutoSave enabled", vim.log.levels.INFO)
 		else
 			vim.notify("AutoSave disabled", vim.log.levels.INFO)
-			-- Clear all timers
+			-- Clear all timers and debounce tracking
 			for bufnr, timer in pairs(timers) do
 				timer:stop()
 				timer:close()
 				timers[bufnr] = nil
+				last_event_time[bufnr] = nil
 			end
 		end
 	end, { desc = "Toggle auto-save functionality" })
@@ -234,6 +263,7 @@ M.setup = function(opts)
 		print("AutoSave Status:")
 		print("  Enabled: " .. tostring(config.enabled))
 		print("  Timeout: " .. config.timeout .. "ms")
+		print("  Debounce delay: " .. config.debounce_delay .. "ms")
 		print("  Active timers: " .. vim.tbl_count(timers))
 		for bufnr, _ in pairs(timers) do
 			local name = vim.api.nvim_buf_get_name(bufnr)
