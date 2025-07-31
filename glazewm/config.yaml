@@ -148,6 +148,7 @@ window_rules:
   - commands: ['move --workspace 1']
     match:
       - window_process: { regex: '(?i)librewolf' }
+      - window_process: { regex: '(?i)zen' }
   
   # WezTerm → Workspace 2
   - commands: ['move --workspace 2']
