@@ -121,11 +121,31 @@ return {
 			sources = {
 				default = { "lsp", "buffer", "path", "lazydev", "snippets" },
 				providers = {
-					lsp = { score_offset = 10 },
-					snippets = { score_offset = 1, min_keyword_length = 2 },
+					lsp = { score_offset = 1 },
+					snippets = { score_offset = 2, min_keyword_length = 2 },
 					buffer = { score_offset = 1 },
 					path = { score_offset = 1 },
 					lazydev = { module = "lazydev.integrations.blink", score_offset = 1 },
+				},
+			},
+			menu = { scrollbar = false },
+			completion = {
+				-- 'prefix' will fuzzy match on the text before the cursor
+				-- 'full' will fuzzy match on the text before _and_ after the cursor
+				-- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
+				keyword = { range = "full" },
+
+				-- Disable auto brackets
+				-- NOTE: some LSPs may add auto brackets themselves anyway
+				accept = { auto_brackets = { enabled = false } },
+
+				-- or set via a function
+				list = {
+					selection = {
+						preselect = function(ctx)
+							return vim.bo.filetype ~= "markdown"
+						end,
+					},
 				},
 			},
 

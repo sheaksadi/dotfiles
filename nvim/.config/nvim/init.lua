@@ -17,6 +17,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		error("Error cloning lazy.nvim:\n" .. out)
 	end
 end ---@diagnostic disable-next-line: undefined-field
+
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -34,7 +35,7 @@ require("lazy").setup({
 		icons = vim.g.have_nerd_font and {} or {},
 	},
 })
-
+require("core.lsp")
 require("config.transparent-diag")
 require("config.autocmd")
 require("config.indent_mapping")
