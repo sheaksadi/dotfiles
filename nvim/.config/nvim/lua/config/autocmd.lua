@@ -32,6 +32,33 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		)
 	end,
 })
+
+-- Create a command group to prevent this autocmd from being duplicated
+-- if you ever reload your configuration. This is standard best practice.
+local cr_fix_group = vim.api.nvim_create_augroup("FixCR", { clear = true })
+
+-- Create the autocmd that will run on every file you save.
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = cr_fix_group,
+	pattern = "*", -- The pattern "*" means "any file".
+
+	-- The command to run on the current buffer. This is NOT a loop.
+	-- It's a single search-and-replace operation.
+	command = [[%s/\r$//e]],
+})
+-- Create a command group to prevent this autocmd from being duplicated
+-- if you ever reload your configuration. This is standard best practice.
+local cr_fix_group = vim.api.nvim_create_augroup("FixCR", { clear = true })
+
+-- Create the autocmd that will run on every file you save.
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = cr_fix_group,
+	pattern = "*", -- The pattern "*" means "any file".
+
+	-- The command to run on the current buffer. This is NOT a loop.
+	-- It's a single search-and-replace operation.
+	command = [[%s/\r$//e]],
+})
 -- -- Close directory buffer on startup to allow alpha to show
 -- vim.api.nvim_create_autocmd("VimEnter", {
 -- 	callback = function()

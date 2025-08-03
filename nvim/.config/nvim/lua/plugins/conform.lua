@@ -3,7 +3,7 @@ return {
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },
 	opts = {
-		notify_on_error = false,
+		notify_on_error = true,
 		format_on_save = function(bufnr)
 			-- Disable "format_on_save lsp_fallback" for languages that don't
 			-- have a well standardized coding style. You can add additional
@@ -29,8 +29,13 @@ return {
 		},
 		formatters = {
 			["sql-formatter"] = {
+				-- We are NOT using 'inherit' because the definition is missing.
+				-- We provide the command to fix the PATH issue.
 				command = vim.fn.stdpath("data") .. "/mason/bin/sql-formatter",
+				-- We provide the args to fix the dialect parsing crash.
+				args = { "--language", "postgresql" },
 			},
 		},
 	},
 }
+
