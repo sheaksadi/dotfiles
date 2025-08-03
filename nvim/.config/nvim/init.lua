@@ -35,7 +35,7 @@ require("lazy").setup({
 		icons = vim.g.have_nerd_font and {} or {},
 	},
 })
-require("core.lsp")
+require("config.lsp")
 require("config.transparent-diag")
 require("config.autocmd")
 require("config.indent_mapping")
