@@ -65,17 +65,6 @@ local vtsls_config = {
 local sqls_config = {
 	cmd = { "/home/sheaksadi/go/bin/sqls" },
 	filetypes = { "sql", "pgsql" },
-	settings = {
-		sqls = {
-			connections = {
-				{
-					driver = "postgresql",
-					-- Corrected dataSourceName with sslmode=disable
-					dataSourceName = "postgresql://jobot:jobotpasssadi@deadhorse.net:5433/jobot-dev?sslmode=disable",
-				},
-			},
-		},
-	},
 	on_attach = function(client, _)
 		-- Disable formatting from sqls (let null-ls handle it)
 		client.server_capabilities.documentFormattingProvider = false
