@@ -119,8 +119,12 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "buffer", "path", "lazydev", "snippets" },
+				default = { "lsp", "snippets", "buffer", "path", "lazydev" },
+				per_filetype = {
+					sql = { "snippets", "dadbod", "buffer" },
+				},
 				providers = {
+					dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
 					lsp = { score_offset = 1 },
 					snippets = { score_offset = 2, min_keyword_length = 2 },
 					buffer = { score_offset = 1 },
@@ -128,25 +132,26 @@ return {
 					lazydev = { module = "lazydev.integrations.blink", score_offset = 1 },
 				},
 			},
-			menu = { scrollbar = false },
+			menu = {
+				scrollbar = false,
+			},
 			completion = {
 				-- 'prefix' will fuzzy match on the text before the cursor
 				-- 'full' will fuzzy match on the text before _and_ after the cursor
 				-- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
 				keyword = { range = "full" },
-
+				ghost_text = {
+					enabled = true,
+					-- show_with_menu = false,
+				},
 				-- Disable auto brackets
 				-- NOTE: some LSPs may add auto brackets themselves anyway
-				accept = { auto_brackets = { enabled = false } },
-
-				-- or set via a function
-				list = {
-					selection = {
-						preselect = function(ctx)
-							return vim.bo.filetype ~= "markdown"
-						end,
-					},
+				accept = { auto_brackets = { enabled = true } },
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 200,
 				},
+				list = { selection = { preselect = true, auto_insert = false } },
 			},
 
 			snippets = { preset = "luasnip" },
