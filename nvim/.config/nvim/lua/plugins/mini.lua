@@ -7,7 +7,7 @@ return {
 
 			-- Add/delete/replace surroundings
 			require("mini.surround").setup()
-
+			require("mini.splitjoin").setup()
 			-- Simple statusline
 			local statusline = require("mini.statusline")
 			statusline.setup({ use_icons = vim.g.have_nerd_font })

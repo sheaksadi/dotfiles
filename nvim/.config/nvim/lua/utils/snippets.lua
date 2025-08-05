@@ -9,6 +9,24 @@ local sn = ls.snippet_node
 local c = ls.choice_node
 local pluralize = require("utils.pluralize")
 
+function extract_last_word(word)
+	if type(word) ~= "string" or word == "" then
+		return ""
+	end
+
+	local snake_match = string.match(word, ".*_([^_]+)$")
+	if snake_match then
+		return snake_match
+	end
+
+	local camel_match = string.match(word, ".*[a-z]([A-Z].*)$")
+	if camel_match then
+		return string.lower(camel_match)
+	end
+
+	return word
+end
+
 local function singular_dynamic(args)
 	local plural = args[1][1] or ""
 
@@ -23,13 +41,29 @@ local function singular_dynamic(args)
 	end
 
 	local singular = pluralize.singular(word_to_singularize)
+	local second_singular = pluralize.singular(extract_last_word(word_to_singularize))
 
 	if singular == word_to_singularize then
-		singular = singular .. "_val"
+		singular = singular .. "Val"
 	end
 
-	return sn(nil, i(1, singular))
+	if second_singular == word_to_singularize then
+		second_singular = singular .. "Val"
+	end
+
+	return sn(nil, { c(1, { i(1, singular), i(1, second_singular) }), t(" of ") })
 end
+
+local forof = {
+	t("for (const "),
+	c(1, {
+		sn(nil, { d(2, singular_dynamic, { 1 }), i(1, "items") }),
+		sn(nil, { t("["), i(2, "key"), t(", "), i(3, "val"), t("] of Object.entries("), i(1, "items"), t(")") }),
+	}),
+	t({ ") {", "\t" }),
+	i(0),
+	t({ "", "}" }),
+}
 
 local function get_loop_variable()
 	local loop_vars = { "i", "j", "k", "l", "m", "n" }
@@ -57,15 +91,6 @@ local function copy_node_text(args)
 	return args[1] or ""
 end
 
-local forof = {
-	t("for (const "),
-	d(2, singular_dynamic, { 1 }), -- Editable singular from plural
-	t(" of "),
-	i(1, "items"), -- User types plural here
-	t({ ") {", "\t" }), -- Use a tab for indentation
-	i(0),
-	t({ "", "}" }),
-}
 local fori = {
 	t("for (let "),
 	d(2, get_loop_variable, {}),
@@ -134,8 +159,8 @@ end
 local cl_body = {
 	t("console.log("),
 	c(1, {
+		i(1, ""),
 		sn(nil, { d(2, create_log_label, { 1 }), i(1, "value") }),
-		i(1, "value"),
 	}),
 	t(");"),
 }
@@ -190,6 +215,72 @@ local is_in_class_treesitter = function()
 
 	return false
 end
+local async_func_body = {
+	-- This dynamic node ONLY builds the function signature.
+	d(1, function()
+		local ft = vim.bo.filetype
+		local is_ts = (ft == "typescript" or ft == "typescriptreact" or ft == "vue")
+		local in_class = is_in_class_treesitter()
+
+		local signature_body
+		if is_ts then
+			if in_class then
+				signature_body = {
+					t("async "),
+					i(1, "methodName"),
+					t("("),
+					c(2, {
+						sn(nil, { i(1, "args"), t(": "), i(2, "any") }),
+						t(""),
+					}),
+					t("): Promise<"),
+					i(3, "void"),
+					t(">"),
+				}
+			else
+				signature_body = {
+					t("async function "),
+					i(1, "functionName"),
+					t("("),
+					c(2, {
+						sn(nil, { i(1, "args"), t(": "), i(2, "any") }),
+						t(""),
+					}),
+					t("): Promise<"),
+					i(3, "void"),
+					t(">"),
+				}
+			end
+		else
+			if in_class then
+				signature_body = {
+					t("async "),
+					i(1, "methodName"),
+					t("("),
+					c(2, { i(1, "args"), t("") }),
+					t(")"),
+				}
+			else
+				signature_body = {
+					t("async function "),
+					i(1, "functionName"),
+					t("("),
+					c(2, { i(1, "args"), t("") }),
+					t(")"),
+				}
+			end
+		end
+		-- The jump indices inside the choiceNode `c(2,...)` above are RELATIVE to that choice.
+		-- They do not conflict with the outer i(1) and i(3) because they live inside a different node.
+		return sn(nil, signature_body)
+	end, {}),
+
+	-- These static nodes build the function body.
+	t(" {"),
+	t({ "", "\t" }),
+	i(0), -- Final cursor position.
+	t({ "", "}" }),
+}
 
 local func_body = {
 	-- This dynamic node ONLY builds the function signature.
@@ -270,6 +361,66 @@ local function is_in_parens()
 	-- new function call or inline arrow function.
 	return trimmed_text_before:sub(-1) == "("
 end
+local alfun = {
+	-- This dynamic node ONLY builds the signature before the "=>".
+	d(1, function()
+		local ft = vim.bo.filetype
+		local is_ts = (ft == "typescript" or ft == "typescriptreact" or ft == "vue")
+		local in_parens = is_in_parens()
+
+		local signature_body
+		if is_ts then
+			-- TypeScript versions
+			if in_parens then
+				-- Inline callback signature WITH return type
+				signature_body = {
+					t("async ("),
+					c(1, { sn(nil, { i(1, "args"), t(": "), i(2, "any") }), t("") }),
+					t(")"),
+				}
+			else
+				-- Full const declaration signature with a better default return type
+				signature_body = {
+					t("const "),
+					i(1, "functionName"),
+					t(" = async ("),
+					c(2, { sn(nil, { i(1, "args"), t(": "), i(2, "any") }), t("") }),
+					t("): Promise<"),
+					i(3, "void"),
+					t(">"),
+				}
+			end
+		else
+			-- JavaScript versions
+			if in_parens then
+				-- Inline callback signature: (args)
+				signature_body = {
+					t("async ("),
+					c(1, { i(1, "args"), t("") }),
+					t(")"),
+				}
+			else
+				-- Full const declaration signature
+				signature_body = {
+					t("const "),
+					i(1, "functionName"),
+					t(" = async ("),
+					c(2, { i(1, "args"), t("") }),
+					t(")"),
+				}
+			end
+		end
+
+		return sn(nil, signature_body)
+	end, {}),
+
+	-- These static nodes build the arrow, body, and return statement.
+	t(" => {"),
+	t({ "", "\t" }),
+	t("return "),
+	i(0), -- The final cursor position is now correctly placed after "return ".
+	t({ "", "}" }),
+}
 
 local lfun = {
 	-- This dynamic node ONLY builds the signature before the "=>".
@@ -452,7 +603,9 @@ local jsSnippets = {
 	s("log", cl_body),
 	s("cls", class_body),
 	s("func", func_body),
+	s("afunc", async_func_body),
 	s("funl", lfun),
+	s("afunl", alfun),
 
 	s("try", try_catch),
 	s("tryf", try_finally),

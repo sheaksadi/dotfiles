@@ -12,24 +12,43 @@ local irregularPlurals = {}
 local irregularSingles = {}
 
 ---
--- Replicates the case of an original word onto a new word token.
--- @param word (string) The original word with the desired case.
--- @param token (string) The new word to apply the case to.
--- @return (string) The token with the case of the original word.
+-- Replicates the case of an original word onto a new word token by using
+-- the original word as a "case template". This correctly handles all cases,
+-- including `camelCase` and `PascalCase`.
+--
+-- @param word (string) The original word with the desired case (e.g., "allBots").
+-- @param token (string) The new, transformed word (e.g., "allbot").
+-- @return (string) The token with the case of the original word restored (e.g., "allBot").
 local function restoreCase(word, token)
+	-- If words are identical, no work needed.
 	if word == token then
 		return token
 	end
+
+	-- Fast path for the most common cases.
 	if word == word:lower() then
 		return token:lower()
 	end
 	if word == word:upper() then
 		return token:upper()
 	end
-	if word:sub(1, 1) == word:sub(1, 1):upper() then
-		return token:sub(1, 1):upper() .. token:sub(2):lower()
+
+	-- Advanced path for mixed-case words (camelCase, PascalCase, etc.)
+	-- We build the result character by character.
+	local result_chars = {}
+	for i = 1, #token do
+		local original_char = word:sub(i, i)
+
+		-- Check if the character at the same position in the original word was uppercase.
+		-- The check for original_char ~= "" handles cases where the new word is longer than the old one.
+		if original_char ~= "" and original_char == original_char:upper() then
+			table.insert(result_chars, token:sub(i, i):upper())
+		else
+			table.insert(result_chars, token:sub(i, i):lower())
+		end
 	end
-	return token:lower()
+
+	return table.concat(result_chars)
 end
 
 ---
