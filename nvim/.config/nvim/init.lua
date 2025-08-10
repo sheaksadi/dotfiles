@@ -1,8 +1,6 @@
--- Set <space> as the leader k
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
 require("config.kickstart")
 require("keymaps.kickstart")
 require("keymaps.primegen")
@@ -23,10 +21,7 @@ vim.opt.rtp:prepend(lazypath)
 -- [[ Configure and install plugins ]]
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
-
-	--  Uncomment the following line and add your plugins to `lua/plugins/*.lua` to get going.
+	"tpope/vim-sleuth",
 	{ import = "plugins" },
 }, {
 	ui = {
@@ -45,4 +40,3 @@ require("utils.sync").setup()
 require("utils.autosave").setup()
 
 require("utils.snippets")
-require("keymaps.harpoon")

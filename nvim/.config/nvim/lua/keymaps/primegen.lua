@@ -1,8 +1,5 @@
 local map = vim.keymap.set
 
--- Clear search highlight
-map("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlights" })
-
 -- Increment/decrement numbers
 map("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 map("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
@@ -34,9 +31,6 @@ map("n", "<leader>to", ":tabnew<CR>", { desc = "Open new tab" })
 map("n", "<leader>tx", ":tabclose<CR>", { desc = "Close tab" })
 map("n", "<leader>tn", ":tabn<CR>", { desc = "Next tab" })
 map("n", "<leader>tp", ":tabp<CR>", { desc = "Previous tab" })
-
--- Git keybinds (if using LazyGit)
-map("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
 
 -- Keep cursor centered when scrolling
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center" })
