@@ -57,13 +57,12 @@ end, { desc = "Paste before selection (keep clipboard)" })
 
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[R]e[n]ame" })
 
-vim.opt.mouse = ""
 vim.keymap.set("n", "<leader>tm", function()
 	if vim.o.mouse == "" then
 		vim.opt.mouse = "a"
-		print("Mouse enabled")
+		vim.notify("Mouse enabled")
 	else
 		vim.opt.mouse = ""
-		print("Mouse disabled")
+		vim.notify("Mouse disabled")
 	end
 end, { desc = "Toggle mouse on/off" })

@@ -4,6 +4,7 @@ vim.g.maplocalleader = " "
 require("config.kickstart")
 require("keymaps.kickstart")
 require("keymaps.primegen")
+require("keymaps.indent_mapping")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -31,9 +32,8 @@ require("lazy").setup({
 	},
 })
 require("config.lsp")
-require("config.transparent-diag")
+require("config.diognisticsAndHighlight")
 require("config.autocmd")
-require("config.indent_mapping")
 
 require("utils.log").setup()
 require("utils.sync").setup()
