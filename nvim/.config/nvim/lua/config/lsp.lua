@@ -1,95 +1,101 @@
-local vtsls_config = {
-	settings = {
-		vtsls = {
-			tsserver = {
-				useSyntaxServer = false,
+local servers = {
+	vtsls = {
+		settings = {
+			vtsls = {
+				tsserver = {
+					useSyntaxServer = false,
 
-				globalPlugins = {
-					{
-						name = "@vue/typescript-plugin",
-						location = vim.fn.stdpath("data")
-							.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
-						languages = { "vue" },
-						configNamespace = "typescript",
+					globalPlugins = {
+						{
+							name = "@vue/typescript-plugin",
+							location = vim.fn.stdpath("data")
+								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+							languages = { "vue" },
+							configNamespace = "typescript",
+						},
 					},
 				},
 			},
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
+			typescript = {
+				inlayHints = {
+					parameterNames = {
+						enabled = "all",
+						suppressWhenArgumentMatchesName = true,
+					},
+					parameterTypes = {
+						enabled = true,
+					},
+					variableTypes = {
+						enabled = true,
+					},
+					propertyDeclarationTypes = {
+						enabled = true,
+					},
+					functionLikeReturnTypes = {
+						enabled = true,
+					},
+					enumMemberValues = {
+						enabled = true,
+					},
+				},
+			},
+			javascript = {
+				inlayHints = {
+					parameterNames = {
+						enabled = "all",
+						suppressWhenArgumentMatchesName = true,
+					},
+					parameterTypes = {
+						enabled = true,
+					},
+					variableTypes = {
+						enabled = true,
+					},
+					propertyDeclarationTypes = {
+						enabled = true,
+					},
+					functionLikeReturnTypes = {
+						enabled = true,
+					},
+					enumMemberValues = {
+						enabled = true,
+					},
+				},
 			},
 		},
-		typescript = {
-			tsserver = {
-				useSyntaxServer = false,
-			},
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
-				parameterNames = {
-					enabled = "all",
+
+		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	},
+	lua_ls = {
+
+		settings = {
+			Lua = {
+				completion = {
+					callSnippet = "Replace",
 				},
-				parameterTypes = {
-					enabled = true,
-				},
-				variableTypes = {
-					enabled = true,
-				},
-				propertyDeclarationTypes = {
-					enabled = true,
-				},
-				functionLikeReturnTypes = {
-					enabled = true,
-				},
-				enumMemberValues = {
-					enabled = true,
-				},
+				-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+				-- diagnostics = { disable = { 'missing-fields' } },
 			},
 		},
 	},
-	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	vue_ls = {},
+	gopls = {},
+	rust_analyzer = {},
+	tailwindcss = {},
+	stylua = {},
+	jsonls = {},
+	yamlls = {},
 }
 
-local sqls_config = {
-	filetypes = { "sql", "pgsql" },
-	settings = {
-		sqls = {
-			connections = {
-				{},
-			},
-		},
-	},
-	-- on_attach = function(client, _)
-	-- 	-- Disable formatting from sqls (let null-ls handle it)
-	-- 	client.server_capabilities.documentFormattingProvider = false
-	-- 	client.server_capabilities.documentRangeFormattingProvider = false
-	-- end,
-}
-vim.lsp.config("vtsls", vtsls_config)
--- vim.lsp.config("sqls", sqls_config)
+local ensure_installed = vim.tbl_keys(servers or {})
+vim.list_extend(ensure_installed, {})
 
-vim.lsp.enable({
-	"vtsls",
-	"vue_ls",
-	"gopls",
-	"rust_analyzer",
-	"tailwindcss",
-	"lua_ls",
-	-- "sqls",
-	"stylua",
-})
+for name, opts in pairs(servers) do
+	vim.lsp.config(name, opts)
+	vim.lsp.enable(name)
+end
+
+require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -103,14 +109,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			mode = mode or "n"
 			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 		end
-
-		-- Rename the variable under your cursor.
-		--  Most Language Servers support renaming across files, etc.
-		map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
-
-		-- Execute a code action, usually your cursor needs to be on top of an error
-		-- or a suggestion from your LSP for this to activate.
-		map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 
 		-- Find references for the word under your cursor.
 		map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
@@ -192,6 +190,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- This may be unwanted, since they displace some of your code
 		if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
 			map("<leader>th", function()
+				-- vim.api.nvim_set_hl(0, "LspInlayHint", { fg = "#7aa2f7", italic = true })
+
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 			end, "[T]oggle Inlay [H]ints")
 		end
@@ -206,7 +206,7 @@ vim.diagnostic.config({
 	severity_sort = true,
 	float = { border = "rounded", source = "if_many" },
 	underline = { severity = vim.diagnostic.severity.ERROR },
-	signs = vim.g.have_nerd_font and {
+	signs = {
 		text = {
 			[vim.diagnostic.severity.ERROR] = "󰅚 ",
 			[vim.diagnostic.severity.WARN] = "󰀪 ",
@@ -252,7 +252,6 @@ vim.diagnostic.config({
 -- vim.api.nvim_set_hl(0, "DiagnosticSignWarn", { fg = "#ffd866" }) -- Yellow for warnings
 -- vim.api.nvim_set_hl(0, "DiagnosticSignInfo", { fg = "#ff1200" }) -- Cyan for info
 vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#dba8ff" }) -- Purple for hints
-
 -- DiagnosticFloatingError xxx links to DiagnosticError
 -- DiagnosticError xxx guifg=#c53b53
 -- DiagnosticFloatingWarn xxx links to DiagnosticWarn

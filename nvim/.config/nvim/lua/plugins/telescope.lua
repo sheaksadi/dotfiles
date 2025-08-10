@@ -46,7 +46,32 @@ return {
 			-- See `:help telescope` and `:help telescope.setup()`
 			require("telescope").setup({
 
-				file_ignore_patterns = { "node_modules", "dist", ".next", ".nuxt", ".cache", ".git", ".idea" },
+				file_ignore_patterns = {
+					"node_modules",
+					"dist",
+					".next",
+					".nuxt",
+					".cache",
+					".git",
+					".idea",
+					-- Rust build artifacts
+					"target",
+					-- Tauri Android generated files
+					"src-tauri/gen/android/build",
+					"src-tauri/gen/android/app/build",
+					"src-tauri/gen/android/.gradle",
+					"src-tauri/gen/android/captures",
+					"src-tauri/gen/android/.externalNativeBuild",
+					"src-tauri/gen/android/.cxx",
+					-- buildSrc artifacts
+					"src-tauri/gen/android/buildSrc/build",
+					"src-tauri/gen/android/buildSrc/.gradle",
+					"*.apk",
+					"*.aab",
+					"*.keystore",
+					"*.jks",
+					"local.properties",
+				},
 				-- You can put your default mappings / updates / etc. in here
 				--  All the info you're looking for is in `:help telescope.setup()`
 				--
@@ -71,9 +96,27 @@ return {
 							".idea",
 							"--exclude",
 							"dist",
-
 							"--exclude",
 							".nuxt",
+							-- Also exclude from fdfind
+							"--exclude",
+							"target",
+							"--exclude",
+							"src-tauri/gen/android/build",
+							"--exclude",
+							"src-tauri/gen/android/app/build",
+							"--exclude",
+							"src-tauri/gen/android/.gradle",
+							"--exclude",
+							"src-tauri/gen/android/captures",
+							"--exclude",
+							"src-tauri/gen/android/.externalNativeBuild",
+							"--exclude",
+							"src-tauri/gen/android/.cxx",
+							"--exclude",
+							"src-tauri/gen/android/buildSrc/build",
+							"--exclude",
+							"src-tauri/gen/android/buildSrc/.gradle",
 						},
 					},
 				},
@@ -82,9 +125,8 @@ return {
 						require("telescope.themes").get_dropdown(),
 					},
 				},
-			})
+			}) -- Enable Telescope extensions if they are installed
 
-			-- Enable Telescope extensions if they are installed
 			pcall(require("telescope").load_extension, "fzf")
 			pcall(require("telescope").load_extension, "ui-select")
 
@@ -96,10 +138,10 @@ return {
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
+			vim.keymap.set("n", "<leader>sl", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
+			-- vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+			vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
 			vim.keymap.set("n", "<leader>/", function()

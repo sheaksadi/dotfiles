@@ -57,8 +57,8 @@ end
 local forof = {
 	t("for (const "),
 	c(1, {
-		sn(nil, { d(2, singular_dynamic, { 1 }), i(1, "items") }),
-		sn(nil, { t("["), i(2, "key"), t(", "), i(3, "val"), t("] of Object.entries("), i(1, "items"), t(")") }),
+		sn(1, { d(2, singular_dynamic, { 1 }), i(1, "items") }),
+		sn(1, { t("["), i(2, "key"), t(", "), i(3, "val"), t("] of Object.entries("), i(1, "items"), t(")") }),
 	}),
 	t({ ") {", "\t" }),
 	i(0),
