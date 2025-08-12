@@ -82,9 +82,9 @@ local servers = {
 	gopls = {},
 	rust_analyzer = {},
 	tailwindcss = {},
-	stylua = {},
 	jsonls = {},
 	yamlls = {},
+	bashls = {},
 }
 
 local ensure_installed = vim.tbl_keys(servers or {})

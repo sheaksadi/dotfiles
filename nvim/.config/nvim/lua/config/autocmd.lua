@@ -94,6 +94,79 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local function client_supports_method(client, method, bufnr)
 			return client:supports_method(method, bufnr)
 		end
+		-- Helper function to brighten a hex color
+		local function brighten_hex_color(hex_color, amount)
+			if not hex_color or hex_color == "" then
+				return nil
+			end
+			local r = tonumber(hex_color:sub(2, 3), 16)
+			local g = tonumber(hex_color:sub(4, 5), 16)
+			local b = tonumber(hex_color:sub(6, 7), 16)
+			r = math.min(255, math.floor(r * (1 + amount)))
+			g = math.min(255, math.floor(g * (1 + amount)))
+			b = math.min(255, math.floor(b * (1 + amount)))
+			return string.format("#%02x%02x%02x", r, g, b)
+		end
+
+		local function get_hl(name)
+			local get_hl_opts = { name = name, link = false, create = false }
+
+			local ok, hl = pcall(vim.api.nvim_get_hl, 0, get_hl_opts)
+
+			if not ok or not hl then
+				return nil
+			end
+
+			for _, key in pairs({ "fg", "bg", "sp" }) do
+				if hl[key] and type(hl[key]) == "number" then
+					hl[key] = string.format("#%06x", hl[key])
+				end
+			end
+
+			return hl
+		end
+
+		local showBlindingRed = false
+		-- This function will be called to set the highlight
+		local function set_lsp_reference_highlight()
+			if showBlindingRed then
+				vim.api.nvim_set_hl(0, "LspReferenceText", { bg = "#ff0000", fg = "#ffffff" }) -- Red background, white text
+				vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = "#ff0000", fg = "#ffffff" })
+				vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = "#ff0000", fg = "#ffffff" })
+				return
+			end
+
+			local result = vim.treesitter.get_captures_at_cursor(0)
+			result = result[#result]
+
+			if not result then
+				return
+			end
+			local group = get_hl("@" .. result)
+
+			for key, value in pairs(group) do
+				if type(value) ~= "string" then
+					return
+				end
+
+				local fg_color_hex = value
+
+				if not fg_color_hex then
+					return
+				end
+
+				local brighter_hex = brighten_hex_color(fg_color_hex, 0.5) -- Adjust brightness
+
+				if not brighter_hex then
+					return
+				end
+
+				-- Set the LspReference highlights to be brightened with no background
+				vim.api.nvim_set_hl(0, "LspReferenceText", { fg = brighter_hex, bg = "NONE", bold = true })
+				vim.api.nvim_set_hl(0, "LspReferenceRead", { fg = brighter_hex, bg = "NONE", bold = true })
+				vim.api.nvim_set_hl(0, "LspReferenceWrite", { fg = brighter_hex, bg = "NONE", bold = true })
+			end
+		end
 
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if
@@ -107,7 +180,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				group = highlight_augroup,
 				callback = function()
 					-- NOTE: uncomment to have no bg text lsp highlights
-					-- set_lsp_reference_highlight() -- Set our dynamic highlight first
+					set_lsp_reference_highlight() -- Set our dynamic highlight first
 					vim.lsp.buf.document_highlight() -- Then trigger the LSP action
 				end,
 			})
@@ -153,78 +226,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 	end,
 })
-
--- Helper function to brighten a hex color
-local function brighten_hex_color(hex_color, amount)
-	if not hex_color or hex_color == "" then
-		return nil
-	end
-	local r = tonumber(hex_color:sub(2, 3), 16)
-	local g = tonumber(hex_color:sub(4, 5), 16)
-	local b = tonumber(hex_color:sub(6, 7), 16)
-	r = math.min(255, math.floor(r * (1 + amount)))
-	g = math.min(255, math.floor(g * (1 + amount)))
-	b = math.min(255, math.floor(b * (1 + amount)))
-	return string.format("#%02x%02x%02x", r, g, b)
-end
-
-local function get_hl(name)
-	local get_hl_opts = { name = name, link = false, create = false }
-
-	local ok, hl = pcall(vim.api.nvim_get_hl, 0, get_hl_opts)
-
-	if not ok or not hl then
-		return nil
-	end
-
-	for _, key in pairs({ "fg", "bg", "sp" }) do
-		if hl[key] and type(hl[key]) == "number" then
-			hl[key] = string.format("#%06x", hl[key])
-		end
-	end
-
-	return hl
-end
-
-local showBlindingRed = false
--- This function will be called to set the highlight
-local function set_lsp_reference_highlight()
-	if showBlindingRed then
-		vim.api.nvim_set_hl(0, "LspReferenceText", { bg = "#ff0000", fg = "#ffffff" }) -- Red background, white text
-		vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = "#ff0000", fg = "#ffffff" })
-		vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = "#ff0000", fg = "#ffffff" })
-		return
-	end
-
-	local result = vim.treesitter.get_captures_at_cursor(0)
-	result = result[#result]
-
-	if not result then
-		return
-	end
-	local group = get_hl("@" .. result)
-
-	for key, value in pairs(group) do
-		if type(value) ~= "string" then
-			print(value)
-			return
-		end
-
-		local fg_color_hex = value
-
-		if not fg_color_hex then
-			return
-		end
-
-		local brighter_hex = brighten_hex_color(fg_color_hex, 0.5) -- Adjust brightness
-
-		if not brighter_hex then
-			return
-		end
-
-		-- Set the LspReference highlights to be brightened with no background
-		vim.api.nvim_set_hl(0, "LspReferenceText", { fg = brighter_hex, bg = "NONE", bold = true })
-		vim.api.nvim_set_hl(0, "LspReferenceRead", { fg = brighter_hex, bg = "NONE", bold = true })
-		vim.api.nvim_set_hl(0, "LspReferenceWrite", { fg = brighter_hex, bg = "NONE", bold = true })
-	end
-end
