@@ -66,3 +66,21 @@ vim.keymap.set("n", "<leader>tm", function()
 		vim.notify("Mouse disabled")
 	end
 end, { desc = "Toggle mouse on/off" })
+
+local function substitute(character)
+	local firstline = vim.fn.line("v")
+	local lastline = vim.fn.line(".")
+	if firstline > lastline then
+		firstline, lastline = lastline, firstline
+	end
+	vim.cmd(firstline .. "," .. lastline .. "s/\\(^\\s*- \\[\\).\\]/\\1" .. character .. "\\]")
+	vim.cmd("nohlsearch")
+end
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.keymap.set({ "n", "v" }, "<leader>x", function()
+			substitute("x")
+		end, { buffer = true, noremap = true, silent = true, desc = "check marks in markdown" })
+	end,
+})

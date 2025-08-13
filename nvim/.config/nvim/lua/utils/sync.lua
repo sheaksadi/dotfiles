@@ -40,12 +40,12 @@ local function run_command_async(cmd, on_exit)
 	local job_id = vim.fn.jobstart(cmd, {
 		on_stdout = function(_, data)
 			if data then
-				notify(table.concat(data, "\n"), "info")
+				-- notify(table.concat(data, "\n"), "info")
 			end
 		end,
 		on_stderr = function(_, data)
 			if data then
-				-- notify(table.concat(data, "\n"), "error")
+				notify(table.concat(data, "\n"), "error")
 			end
 		end,
 		on_exit = function(_, code)
@@ -90,7 +90,7 @@ end
 local function sync_file(filepath)
 	-- Check if the file should be excluded
 	if should_exclude(filepath) then
-		notify("Excluded: " .. filepath, "info")
+		-- notify("Excluded: " .. filepath, "info")
 		return
 	end
 
@@ -111,7 +111,7 @@ local function sync_file(filepath)
 			-- Add verbose logging and ignore errors
 			local cmd =
 				string.format("rsync -avz --progress --stats -v --ignore-errors %s %s", filepath, remote_full_path)
-			notify("Starting sync: " .. cmd, "info")
+			notify("Starting sync: " .. remote_full_path, "info")
 
 			-- Run rsync in the background
 			local success = run_command_async(cmd, function(code)
@@ -162,7 +162,7 @@ local function sync_directory()
 				normalized_local_path,
 				remote_path
 			)
-			notify("Starting full directory sync: " .. cmd, "info")
+			notify("Starting full directory sync: " .. normalized_local_path .. "\nRemote: " .. remote_path, "info")
 
 			-- Run rsync in the background
 			local success = run_command_async(cmd, function(code)
