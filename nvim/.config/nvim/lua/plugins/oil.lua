@@ -16,6 +16,7 @@ return {
 				end,
 				desc = "File Explorer (Oil)",
 			},
+			desc = "File Explorer (Oil)",
 			{
 				"<c-s>",
 				function()

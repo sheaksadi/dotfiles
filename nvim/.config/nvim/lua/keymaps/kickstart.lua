@@ -1,7 +1,13 @@
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlights" })
+vim.keymap.set("n", "<Esc>", function()
+	vim.cmd("nohlsearch")
+	local oil = require("oil")
+	if oil.get_current_dir() then
+		oil.close()
+	end
+end, { silent = true })
+vim.keymap.set("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlights", silent = true })
 
 -- Diagnostic keymaps
 -- vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" }) TODO: learn to how to properly use this
@@ -12,13 +18,13 @@ vim.keymap.set("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search high
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode", silent = true })
 
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window", silent = true })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window", silent = true })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window", silent = true })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window", silent = true })
 
 -- Add a keybinding to open Telescope in your config directory
 vim.keymap.set("n", "<leader>nc", function()
@@ -26,18 +32,26 @@ vim.keymap.set("n", "<leader>nc", function()
 		prompt_title = "< Neovim Config >",
 		cwd = "~/.config/nvim",
 	})
-end, { desc = "Find in [N]eovim [c]onfig" })
+end, { desc = "Find in [N]eovim [c]onfig", silent = true })
 
 -- Keep visual selection after shifting >
-vim.keymap.set("x", ">", ">gv", { desc = "Indent right and keep selection" })
+vim.keymap.set("x", ">", ">gv", { desc = "Indent right and keep selection", silent = true })
 
 -- Keep visual selection after shifting <
-vim.keymap.set("x", "<", "<gv", { desc = "Indent left and keep selection" })
+vim.keymap.set("x", "<", "<gv", { desc = "Indent left and keep selection", silent = true })
 
 -- Save with Ctrl+S in normal and insert mode
 -- vim.keymap.set("n", "<C-s>", ":w<CR><Esc>", { desc = "Save file" })
-vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (insert mode)" })
-vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (visual mode)" })
+vim.keymap.set("i", "<C-s>", function()
+	-- Dismiss completion menu if visible
+	if vim.fn.pumvisible() == 1 then
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-e>", true, false, true), "n", false)
+	end
+	-- Exit insert mode and save
+	vim.cmd("stopinsert")
+	vim.cmd("w")
+end, { desc = "Save file (insert mode)", silent = true })
+vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>", { desc = "Save file (visual mode)", silent = true })
 
 -- VISUAL MODE: p (paste after) - Preserves clipboard
 vim.keymap.set("x", "p", function()
@@ -45,7 +59,7 @@ vim.keymap.set("x", "p", function()
 	local clipboard_type = vim.fn.getregtype("+")
 	vim.cmd('normal! "_dP') -- Delete selection, paste before (simulates 'p' in Visual mode)
 	vim.fn.setreg("+", clipboard_content, clipboard_type)
-end, { desc = "Paste after selection (keep clipboard)" })
+end, { desc = "Paste after selection (keep clipboard)", silent = true })
 
 -- VISUAL MODE: P (paste before) - Preserves clipboard
 vim.keymap.set("x", "P", function()
@@ -53,9 +67,9 @@ vim.keymap.set("x", "P", function()
 	local clipboard_type = vim.fn.getregtype("+")
 	vim.cmd('normal! "_dp') -- Delete selection, paste after (simulates 'P' in Visual mode)
 	vim.fn.setreg("+", clipboard_content, clipboard_type)
-end, { desc = "Paste before selection (keep clipboard)" })
+end, { desc = "Paste before selection (keep clipboard)", silent = true })
 
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[R]e[n]ame" })
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[R]e[n]ame", silent = true })
 
 vim.keymap.set("n", "<leader>tm", function()
 	if vim.o.mouse == "" then
@@ -65,7 +79,7 @@ vim.keymap.set("n", "<leader>tm", function()
 		vim.opt.mouse = ""
 		vim.notify("Mouse disabled")
 	end
-end, { desc = "Toggle mouse on/off" })
+end, { desc = "Toggle mouse on/off", silent = true })
 
 local function substitute(character)
 	local firstline = vim.fn.line("v")

@@ -29,13 +29,13 @@ return {
 			end
 
 			-- Indent scope
-			require("mini.indentscope").setup({
-				symbol = "│",
-				options = { try_as_border = true },
-				draw = {
-					animation = require("mini.indentscope").gen_animation.none(),
-				},
-			})
+			-- require("mini.indentscope").setup({
+			-- 	symbol = "│",
+			-- 	options = { try_as_border = true },
+			-- 	draw = {
+			-- 		animation = require("mini.indentscope").gen_animation.none(),
+			-- 	},
+			-- })
 
 			-- Disable for certain filetypes
 			vim.api.nvim_create_autocmd("FileType", {

@@ -207,12 +207,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			end, -- The action to trigger
 			{ buffer = event.buf, desc = "[L]SP: [R]ed" }
 		)
-		vim.keymap.set(
-			{ "n", "v" }, -- Normal and Visual modes
-			"<leader>ca", -- Your quick action key
-			vim.lsp.buf.code_action, -- The action to trigger
-			{ buffer = event.buf, desc = "LSP: Quick actions" }
-		)
+		-- vim.keymap.set(
+		-- 	{ "n", "v" }, -- Normal and Visual modes
+		-- 	"<leader>ca", -- Your quick action key
+		-- 	vim.lsp.buf.code_action, -- The action to trigger
+		-- 	{ buffer = event.buf, desc = "LSP: Quick actions" }
+		-- )
 		-- The following code creates a keymap to toggle inlay hints in your
 		-- code, if the language server you are using supports them
 		--

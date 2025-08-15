@@ -6,7 +6,7 @@ return {
 
 			views = {
 				mini = {
-					timeout = 4000,
+					timeout = 5000,
 				},
 			},
 		},
