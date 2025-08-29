@@ -21,6 +21,7 @@ folders=(
     "$HOME/rust-projects"
     "$USER_WIN_DIR/WebstormProjects" # Now uses the variable
     "$USER_WIN_DIR/rust-projects"    # Now uses the variable
+    "$USER_WIN_DIR/js-projects"    # Now uses the variable
     # "$USER_WIN_DIR"
     # Add more paths here, e.g.:
     # "$HOME/work"

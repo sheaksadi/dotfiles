@@ -251,3 +251,4 @@ export PATH=$PATH:$(go env GOPATH)/bin
 
 eval "$(zoxide init --cmd cd zsh)"  
 export PATH=$PATH:/snap/bin
+export PATH="$PATH:/opt/nvim/"
