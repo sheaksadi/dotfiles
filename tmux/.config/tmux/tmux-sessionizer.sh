@@ -17,6 +17,7 @@ run_project_script() {
 
 folders=(
     "$HOME/js-projects"
+    "$HOME/projects"
     "$HOME"
     "$HOME/rust-projects"
     "$USER_WIN_DIR/WebstormProjects" # Now uses the variable
