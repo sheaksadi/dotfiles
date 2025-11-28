@@ -18,6 +18,9 @@ return {
 			"stylua",
 			"shellcheck",
 			"shfmt",
+			"black",
+			"isort",
+			"google-java-format",
 		}
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -41,11 +44,8 @@ return {
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
-				--
-				-- You can use 'stop_after_first' to run the first available formatter from the list
-				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				python = { "isort", "black" },
+				java = { "google-java-format" },
 				sql = { "sql-formatter" },
 				sh = { "shfmt" },
 				bash = { "shfmt" },

@@ -85,7 +85,60 @@ local servers = {
 	jsonls = {},
 	yamlls = {},
 	bashls = {},
-	jdtls = {},
+	pyright = {
+		settings = {
+			python = {
+				analysis = {
+					autoSearchPaths = true,
+					diagnosticMode = "workspace",
+					useLibraryCodeForTypes = true,
+					typeCheckingMode = "basic",
+				},
+			},
+		},
+	},
+	jdtls = {
+		settings = {
+			java = {
+				signatureHelp = { enabled = true },
+				contentProvider = { preferred = "fernflower" },
+				completion = {
+					favoriteStaticMembers = {
+						"org.junit.Assert.*",
+						"org.junit.jupiter.api.Assertions.*",
+						"org.mockito.Mockito.*",
+					},
+					filteredTypes = {
+						"com.sun.*",
+						"io.micrometer.shaded.*",
+						"java.awt.*",
+						"jdk.*",
+						"sun.*",
+					},
+				},
+				sources = {
+					organizeImports = {
+						starThreshold = 9999,
+						staticStarThreshold = 9999,
+					},
+				},
+				codeGeneration = {
+					toString = {
+						template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
+					},
+					useBlocks = true,
+				},
+				configuration = {
+					runtimes = {
+						{
+							name = "JavaSE-21",
+							path = "/usr/lib/jvm/java-21-openjdk-amd64/",
+						},
+					},
+				},
+			},
+		},
+	},
 }
 
 local ensure_installed = vim.tbl_keys(servers or {})
