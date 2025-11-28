@@ -85,6 +85,7 @@ local servers = {
 	jsonls = {},
 	yamlls = {},
 	bashls = {},
+	jdtls = {},
 }
 
 local ensure_installed = vim.tbl_keys(servers or {})

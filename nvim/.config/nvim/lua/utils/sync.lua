@@ -2,9 +2,10 @@ local M = {}
 
 -- Define paths to watch and their corresponding remote destinations
 M.paths = {
-	["/mnt/c/users/sheaksadi/WebstormProjects/pubg_leaderboard/"] = "sheaksadi@deadhorse.net:~/pubg_test/pubg_leaderboard/",
+	["/mnt/c/users/sheaksadi/WebstormProjects/pubg_leaderboard/"] =
+	"sheaksadi@deadhorse.net:~/pubg_test/pubg_leaderboard/",
 	["/mnt/c/users/sheaksadi/WebstormProjects/pubg_scoreboard/"] = "sheaksadi@deadhorse.net:~/pubg_test/pubg_scoreboard/",
-	["/home/sheaksadi/js-projects/jobot/"] = "sheaksadi@deadhorse.net:~/jobot/",
+	["/home/sheaksadi/projects/jobot/"] = "sheaksadi@deadhorse.net:~/jobot/",
 	["/mnt/c/users/sheaksadi/GolandProjects/mm-backend/"] = "sheaksadi@deadhorse.net:~/mm-backend/",
 	["~/js-projects/mm-frontend/"] = "sheaksadi@deadhorse.net:~/mm-frontend/",
 }
@@ -84,8 +85,9 @@ end
 
 -- Helper function (or use string.sub directly)
 function string.endsWith(str, suffix)
-	return str:sub(-#suffix) == suffix
+	return str:sub(- #suffix) == suffix
 end
+
 -- Function to sync a file or directory with rsync
 local function sync_file(filepath)
 	-- Check if the file should be excluded

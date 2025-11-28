@@ -1,0 +1,185 @@
+" .ideavimrc - IntelliJ IdeaVim Configuration
+" Based on Neovim config from /home/sheaksadi/dotfiles/nvim/.config/nvim
+
+" ============================================================================
+" BASIC SETTINGS
+" ============================================================================
+set number
+set relativenumber
+set ignorecase
+set smartcase
+set scrolloff=10
+set incsearch
+set hlsearch
+set showmode
+set clipboard=unnamedplus
+set ideajoin
+
+" Set leader key to space
+let mapleader = " "
+
+" ============================================================================
+" IDEAVIM EXTENSIONS (Enable IdeaVim plugins for enhanced functionality)
+" ============================================================================
+set surround
+set commentary
+set argtextobj
+set textobj-entire
+set ReplaceWithRegister
+set exchange
+set highlightedyank
+set NERDTree
+
+" ============================================================================
+" BASIC KEYMAPS
+" ============================================================================
+
+" Clear search highlights with Esc
+nnoremap <Esc> :nohlsearch<CR>
+nnoremap <leader>nh :nohlsearch<CR>
+
+" Window navigation (Ctrl+h/j/k/l)
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+
+" Keep visual selection after indenting
+xnoremap > >gv
+xnoremap < <gv
+
+" Save file with Ctrl+S
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>
+vnoremap <C-s> <Esc>:w<CR>
+
+" ============================================================================
+" PRIMEGEN-STYLE KEYMAPS
+" ============================================================================
+
+" Increment/decrement numbers
+nnoremap <leader>+ <C-a>
+nnoremap <leader>- <C-x>
+
+" Move text up and down in visual mode
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Keep cursor centered while searching
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Join lines without moving cursor
+nnoremap J mzJ`z
+
+" Paste without losing current register
+xnoremap <leader>p "_dP
+
+" Delete without copying to register
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+
+" Tab navigation
+nnoremap <leader>to :tabnew<CR>
+nnoremap <leader>tx :tabclose<CR>
+nnoremap <leader>tn :tabnext<CR>
+nnoremap <leader>tp :tabprevious<CR>
+
+" Keep cursor centered when scrolling
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
+" Keep cursor centered when jumping through the jumplist
+nnoremap <C-o> <C-o>zz
+nnoremap <C-i> <C-i>zz
+
+" ============================================================================
+" INTELLIJ-SPECIFIC ACTIONS
+" ============================================================================
+
+" LSP-like mappings using IntelliJ actions
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gD :action GotoTypeDeclaration<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gr :action FindUsages<CR>
+nnoremap K :action QuickJavaDoc<CR>
+
+" Code actions
+nnoremap <leader>ca :action ShowIntentionActions<CR>
+vnoremap <leader>ca :action ShowIntentionActions<CR>
+
+" Format code
+nnoremap <leader>f :action ReformatCode<CR>
+vnoremap <leader>f :action ReformatCode<CR>
+
+" Search/Find mappings
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>fg :action FindInPath<CR>
+nnoremap <leader>fb :action RecentFiles<CR>
+nnoremap <leader>fs :action GotoSymbol<CR>
+nnoremap <leader>fc :action GotoClass<CR>
+
+" File explorer (NERDTree toggle)
+nnoremap <leader>e :NERDTreeToggle<CR>
+
+" Refactoring
+nnoremap <leader>re :action RenameElement<CR>
+nnoremap <leader>rf :action RenameFile<CR>
+nnoremap <leader>rm :action Move<CR>
+nnoremap <leader>ri :action Inline<CR>
+nnoremap <leader>rv :action IntroduceVariable<CR>
+nnoremap <leader>rc :action IntroduceConstant<CR>
+nnoremap <leader>rp :action IntroduceParameter<CR>
+nnoremap <leader>rm :action ExtractMethod<CR>
+
+" Navigate errors/diagnostics
+nnoremap [d :action GotoPreviousError<CR>
+nnoremap ]d :action GotoNextError<CR>
+
+" Quickfix/Error list navigation
+nnoremap <C-n> :action GotoNextError<CR>
+nnoremap <C-p> :action GotoPreviousError<CR>
+
+" Git integration
+nnoremap <leader>gb :action Git.Branches<CR>
+nnoremap <leader>gc :action Git.Commit<CR>
+nnoremap <leader>gp :action Git.Pull<CR>
+nnoremap <leader>gu :action Git.Push<CR>
+
+" Run/Debug
+nnoremap <leader>rr :action Run<CR>
+nnoremap <leader>rd :action Debug<CR>
+nnoremap <leader>rs :action Stop<CR>
+
+" Toggle terminal
+nnoremap <leader>tt :action ActivateTerminalToolWindow<CR>
+
+" Show file structure
+nnoremap <leader>o :action FileStructurePopup<CR>
+
+" Recent locations
+nnoremap <leader>rl :action RecentLocations<CR>
+
+" Close active window/tab
+nnoremap <leader>q :action CloseContent<CR>
+
+" Toggle distraction-free mode
+nnoremap <leader>z :action ToggleDistractionFreeMode<CR>
+
+" Window splits
+nnoremap <leader>sv :action SplitVertically<CR>
+nnoremap <leader>sh :action SplitHorizontally<CR>
+nnoremap <leader>su :action Unsplit<CR>
+nnoremap <leader>sm :action UnsplitAll<CR>
+
+" ============================================================================
+" NOTES
+" ============================================================================
+" Some Neovim keymaps cannot be directly translated to IdeaVim:
+" - Custom indent_with_i/indent_with_a functions (Neovim-specific Lua)
+" - Oil.nvim integration (file explorer plugin)
+" - Telescope integration (fuzzy finder - use IntelliJ's search instead)
+" - Window resizing with Alt+Arrow keys (IntelliJ handles this differently)
+"
+" IntelliJ equivalents are provided using :action commands above

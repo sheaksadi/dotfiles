@@ -82,7 +82,12 @@ zinit light zsh-users/zsh-autosuggestions
 
 # fzf configuration
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --preview 'batcat --color=always {}'"
-export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --no-ignore --exclude node_modules --exclude dist --exclude .next --exclude .nuxt --exclude .cache'
+
+if command -v fdfind > /dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --no-ignore --exclude node_modules --exclude dist --exclude .next --exclude .nuxt --exclude .cache'
+else
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --no-ignore --exclude node_modules --exclude dist --exclude .next --exclude .nuxt --exclude .cache'
+fi
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -186,7 +191,9 @@ alias gcm='git commit -m'
 alias gp='git push'
 
 
-alias fd=fdfind
+if command -v fdfind > /dev/null 2>&1; then
+    alias fd=fdfind
+fi
 
 alias bat='batcat'
 
@@ -252,3 +259,11 @@ export PATH=$PATH:$(go env GOPATH)/bin
 eval "$(zoxide init --cmd cd zsh)"  
 export PATH=$PATH:/snap/bin
 export PATH="$PATH:/opt/nvim/"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/sheaksadi/.lmstudio/bin"
+# End of LM Studio CLI section
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export NDK_HOME="$ANDROID_HOME/ndk/29.0.13846066"
+export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
