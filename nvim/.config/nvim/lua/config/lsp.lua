@@ -98,8 +98,23 @@ local servers = {
 		},
 	},
 	jdtls = {
+		-- 1. ADD THIS: Force Neovim to use the system jdtls you installed (bypass Mason/mise bugs)
+		-- (Only uncomment this if you installed it via pacman/yay)
+		-- cmd = { '/usr/bin/jdtls' },
+		--
+		cmd = {
+			"env",
+			"JAVA_HOME=" .. vim.fn.expand("~/.local/share/mise/installs/java/21.0.2"),
+			vim.fn.expand("~/.local/share/nvim/mason/bin/jdtls")
+		},
 		settings = {
 			java = {
+				project = {
+					referencedLibraries = {
+						"lib/**/*.jar",
+						"lib/*.jar",
+					},
+				},
 				signatureHelp = { enabled = true },
 				contentProvider = { preferred = "fernflower" },
 				completion = {
@@ -132,7 +147,8 @@ local servers = {
 					runtimes = {
 						{
 							name = "JavaSE-21",
-							path = "/usr/lib/jvm/java-21-openjdk-amd64/",
+							-- 2. FIX THIS: Point exactly to your mise Java 21 installation!
+							path = vim.fn.expand("~/.local/share/mise/installs/java/21.0.2/"),
 						},
 					},
 				},
