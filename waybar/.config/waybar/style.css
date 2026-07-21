@@ -18,6 +18,7 @@
 @define-color yellow   #f9e2af;
 @define-color peach    #fab387;
 @define-color red      #f38ba8;
+@define-color pink     #f5c2e7;
 
 * {
   font-family: "JetBrainsMono Nerd Font", monospace;
@@ -80,7 +81,8 @@ tooltip label {
 #pulseaudio,
 #bluetooth,
 #battery,
-#custom-vpn,
+#mpris,
+#backlight,
 #custom-expand-icon,
 #tray {
   padding: 0 8px;
@@ -116,12 +118,30 @@ tooltip label {
   color: @overlay0;
 }
 
-#custom-vpn {
+#mpris {
   color: @green;
 }
 
-#custom-vpn.disconnected {
+#mpris.paused {
   color: @overlay0;
+}
+
+#mpris.stopped {
+  color: @overlay0;
+}
+
+/* Second pulseaudio instance = microphone. */
+#pulseaudio.microphone {
+  color: @pink;
+  padding: 0 8px;
+}
+
+#pulseaudio.microphone.source-muted {
+  color: @overlay0;
+}
+
+#backlight {
+  color: @yellow;
 }
 
 #battery {

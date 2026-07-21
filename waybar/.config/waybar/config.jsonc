@@ -12,7 +12,9 @@
     "clock"
   ],
   "modules-right": [
-    "custom/vpn",
+    "mpris",
+    "pulseaudio#microphone",
+    "backlight",
     "group/tray-expander",
     "bluetooth",
     "network",
@@ -51,11 +53,54 @@
     "on-click-right": "alacritty",
     "tooltip-format": "Launch apps\n\nSuper + Space"
   },
-  "custom/vpn": {
-    "exec": "~/.config/waybar/scripts/vpn-speed.sh",
-    "return-type": "json",
-    "interval": 2,
-    "on-click": "~/.config/waybar/scripts/vpn-toggle.sh"
+  // Music. Hides itself entirely when no player is running, so unlike the old
+  // VPN module there is no permanent placeholder sitting in the bar.
+  "mpris": {
+    "format": "{status_icon} {dynamic}",
+    "format-paused": "{status_icon} <i>{dynamic}</i>",
+    "status-icons": {
+      "playing": "",
+      "paused": "",
+      "stopped": ""
+    },
+    "dynamic-order": ["title", "artist"],
+    "dynamic-len": 38,
+    "interval": 1,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "tooltip-format": "{player} · {status}\n{title}\n{artist}"
+  },
+
+  // Microphone — second pulseaudio instance, reporting the default source.
+  "pulseaudio#microphone": {
+    "format": "{format_source}",
+    // Glyphs are written as \u escapes on purpose: literal Font Awesome
+    // characters get stripped by some editors/tools, leaving an empty string
+    // and an invisible module.
+    "format-source": "",
+    "format-source-muted": "",
+    "on-click": "~/.config/hypr/scripts/audio-menu.sh input",
+    "on-click-middle": "pamixer --default-source -t",
+    "on-click-right": "pavucontrol -t 4",
+    "on-scroll-up": "pamixer --default-source -i 5",
+    "on-scroll-down": "pamixer --default-source -d 5",
+    "scroll-step": 5,
+    "tooltip-format": "Mic {source_volume}%\nClick: pick input · Middle: mute · Right: pavucontrol"
+  },
+
+  // Display brightness. Scroll to adjust.
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "on-click": "brightnessctl set 100%",
+    "on-click-right": "brightnessctl set 10%",
+    "tooltip-format": "Brightness {percent}%"
   },
   "cpu": {
     "interval": 5,
@@ -91,7 +136,7 @@
     "format": "{capacity}% {icon}",
     "format-discharging": "{icon}",
     "format-charging": "{icon}",
-    "format-plugged": "",
+    "format-plugged": "",
     "format-icons": {
       "charging": [
         "󰢜",
@@ -128,7 +173,7 @@
     }
   },
   "bluetooth": {
-    "format": "",
+    "format": "",
     "format-disabled": "󰂲",
     "format-off": "󰂲",
     "format-connected": "󰂱",
@@ -138,18 +183,19 @@
   },
   "pulseaudio": {
     "format": "{icon}",
-    "on-click": "pavucontrol",
-    "on-click-right": "pamixer -t",
-    "tooltip-format": "Playing at {volume}%",
+    "on-click": "~/.config/hypr/scripts/audio-menu.sh output",
+    "on-click-middle": "pamixer -t",
+    "on-click-right": "pavucontrol",
+    "tooltip-format": "Volume {volume}%\nClick: pick output · Middle: mute · Right: pavucontrol",
     "scroll-step": 5,
-    "format-muted": "",
+    "format-muted": "",
     "format-icons": {
-      "headphone": "",
-      "headset": "",
+      "headphone": "",
+      "headset": "",
       "default": [
-        "",
-        "",
-        ""
+        "",
+        "",
+        ""
       ]
     }
   },
@@ -165,7 +211,7 @@
     ]
   },
   "custom/expand-icon": {
-    "format": " ",
+    "format": "",
     "tooltip": false
   },
   "tray": {
