@@ -4,6 +4,19 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		main = "nvim-treesitter.configs", -- Sets main module to use for opts
+		init = function()
+			-- Monkey patch vim.treesitter.get_node_text to handle array of nodes returned by Neovim nightly
+			local orig_get_node_text = vim.treesitter.get_node_text
+			vim.treesitter.get_node_text = function(node, source, opts)
+				if type(node) == "table" and type(node.range) ~= "function" then
+					node = node[#node]
+				end
+				if not node then
+					return ""
+				end
+				return orig_get_node_text(node, source, opts)
+			end
+		end,
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 		opts = {
 			ensure_installed = {

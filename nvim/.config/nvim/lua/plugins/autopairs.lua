@@ -17,8 +17,11 @@ return {
 				},
 				disable_filetype = { "TelescopePrompt", "spectre_panel" },
 				fast_wrap = {},
-			})
-		end,
+		})
+
+		local Rule = require("nvim-autopairs.rule")
+		autopairs.add_rule(Rule("<", ">"))
+	end,
 	},
 }
 

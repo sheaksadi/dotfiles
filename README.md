@@ -1,6 +1,34 @@
 # 🚀 My Dotfiles
 
-Configuration files for Linux/WSL and Windows development environment.
+Configuration files for a Linux desktop (Arch/Manjaro + Hyprland), Linux/WSL
+shells, and a Windows development environment.
+
+Managed with [GNU Stow](https://www.gnu.org/software/stow/). Every top-level
+directory is a *package* whose contents mirror `$HOME`, so
+`hypr/.config/hypr/` is symlinked to `~/.config/hypr`.
+
+## 📦 Packages
+
+| Package | Target | Platform | What it is |
+|---|---|---|---|
+| `hypr` | `~/.config/hypr` | Linux (Wayland) | Hyprland compositor, lock, idle, wallpaper + helper scripts |
+| `waybar` | `~/.config/waybar` | Linux (Wayland) | Status bar, Catppuccin Mocha |
+| `wofi` | `~/.config/wofi` | Linux (Wayland) | App launcher / dmenu |
+| `mako` | `~/.config/mako` | Linux (Wayland) | Notification daemon |
+| `alacritty` | `~/.config/alacritty` | Linux | Terminal |
+| `btop` | `~/.config/btop` | Linux | Resource monitor |
+| `fastfetch` | `~/.config/fastfetch` | Linux | System info |
+| `lazygit` | `~/.config/lazygit` | Linux | Git TUI |
+| `starship` | `~/.config/starship.toml` | Linux | Shell prompt |
+| `zsh` | `~/.zshrc` | Linux/WSL | Shell |
+| `bash` | `~/.bashrc` | Linux/WSL | Shell |
+| `nvim` | `~/.config/nvim` | Linux/WSL | Neovim |
+| `tmux` | `~/.config/tmux` | Linux/WSL | Terminal multiplexer |
+| `oh-my-posh` | `~/.config/oh-my-posh` | Linux/WSL | Prompt themes |
+| `wezterm` | `~/.wezterm.lua` | Windows | Terminal |
+| `glazewm` | `~/.glzr/glazewm` | Windows | Tiling WM |
+| `zebar` | `~/.glzr/zebar` | Windows | Status bar |
+| `scripts` | — | Windows | AutoHotkey helpers |
 
 ## 📋 Quick Setup
 
@@ -8,7 +36,6 @@ Configuration files for Linux/WSL and Windows development environment.
 
 - [Git](https://git-scm.com/)
 - [GNU Stow](https://www.gnu.org/software/stow/)
-  - Install on Ubuntu/WSL: `sudo apt install stow`
 
 ### 📥 1. Clone Repository
 
@@ -17,45 +44,76 @@ git clone https://github.com/sheaksadi/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
-### 🐧 Linux/WSL Setup
+> Stow resolves symlinks relative to the repo's parent directory, so the clone
+> must live directly in `$HOME` (i.e. `~/dotfiles`).
 
-#### Install Dependencies
+## 🖥️ Arch / Manjaro — Hyprland desktop
+
+### Install dependencies
 
 ```bash
-# Update package list and install GNU Stow
-sudo apt update && sudo apt install stow
+sudo pacman -S --needed \
+  hyprland xdg-desktop-portal-hyprland waybar wofi mako \
+  hyprlock hypridle hyprpaper hyprshot \
+  wl-clipboard cliphist grim slurp \
+  brightnessctl pamixer playerctl polkit-kde-agent \
+  alacritty btop fastfetch lazygit starship \
+  ttf-jetbrains-mono-nerd noto-fonts-emoji jq
 ```
 
-#### Stow Configurations
+### Stow
 
 ```bash
-# Run these commands from ~/dotfiles
-stow zsh       # Install Zsh configuration
-stow nvim      # Install Neovim configuration
-stow tmux      # Install Tmux configuration
+cd ~/dotfiles
+stow hypr waybar wofi mako alacritty btop fastfetch lazygit starship
+stow zsh bash nvim tmux oh-my-posh
+```
+
+Log out and pick **Hyprland** in your display manager's session menu.
+
+### Notes on the Hyprland setup
+
+- **Keybinds** are described inline (`bindd`), so `Super + Shift + /` opens a
+  searchable list generated live from `hyprctl binds` — it can never drift from
+  the config.
+- **Wallpapers** are per-monitor. `Super + Ctrl + Space` picks one;
+  `hyprpaper.conf` is rewritten by `scripts/wallpaper-picker.sh` and is the
+  single source of truth.
+  hyprpaper 0.8.4 does not apply `wallpaper =` from its own config on some
+  systems, so `scripts/wallpaper-restore.sh` re-applies it over IPC at login.
+- **Locking** goes through `scripts/lock.sh`, which respawns hyprlock if it
+  crashes. This needs `misc:allow_session_lock_restore = true` (set in
+  `looknfeel.conf`) — without it, a dead lock client strands the session and the
+  only way out is another TTY.
+- **Idle** timings are power-aware via `scripts/idle.sh`: on battery the screen
+  locks after 5 min and suspends at 30; plugged in it locks after 30 min and
+  never suspends.
+
+## 🐧 Linux / WSL — shells only
+
+```bash
+cd ~/dotfiles
+stow zsh nvim tmux
 ```
 
 ```bash
-# install zsh plugins
+# zsh plugins
 mkdir -p ~/.zsh
-
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosuggestions
 ```
 
-### 🪟 Windows Setup
+## 🪟 Windows Setup
 
-#### Enable Developer Mode
+### Enable Developer Mode
 
 ```powershell
-# Enable Developer mode registry key
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 ```
 
-#### Create Symlinks
+### Create Symlinks
 
 ```powershell
-# Define WSL home path variable
 $WslHomePath = "\\wsl.localhost\Debian\home\$env:USERNAME\dotfiles"
 
 # WezTerm configuration
@@ -72,43 +130,31 @@ New-Item -ItemType SymbolicLink -Path "$GlzrPath\glazewm" -Target "$WslHomePath\
 New-Item -ItemType SymbolicLink -Path "$GlzrPath\zebar" -Target "$WslHomePath\zebar"
 ```
 
-#### Alternate Way (with Fullpath)
-
-```bash
-# WezTerm configuration
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.wezterm.lua" -Target "\\wsl$\Debian\home\sadi\dotfiles\wezterm\.wezterm.lua"
-
-# Create .glzr folder
-New-Item -ItemType Directory -Path "$env:USERPROFILE\.glzr" -Force
-
-# GlazeWM configuration
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\glazewm" -Target "\\wsl$\Debian\home\sadi\dotfiles\glazewm"
-
-# Zebar configuration
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\zebar" -Target "\\wsl$\Debian\home\sadi\dotfiles\zebar"
-```
-
 ## 🛠 Maintenance Commands
 
 | Command | Description |
-|---------|-------------|
+|---|---|
 | `git pull` | Update dotfiles repository |
-| `stow -R zsh` | Restow configuration (replace symlinks) |
-| `stow -D zsh` | Unstow configuration (remove symlinks) |
+| `stow <pkg>` | Create symlinks for a package |
+| `stow -R <pkg>` | Restow (refresh symlinks after adding files) |
+| `stow -D <pkg>` | Unstow (remove symlinks; files stay in the repo) |
+| `stow --adopt <pkg>` | Pull existing real files *into* the repo, then symlink — **overwrites the repo's copy**, so `git diff` right after |
 
 ### 💡 Helpful Utilities
 
-```powershell
-# Remove existing configuration
-Remove-Item "$env:USERPROFILE\.glzr\glazewm\" -Force
+```bash
+# Confirm something is actually a symlink and where it points
+readlink -f ~/.config/hypr
+```
 
-# Verify symlink details
+```powershell
+# Verify symlink details (Windows)
 Get-Item "$env:USERPROFILE\.wezterm.lua" | Select-Object LinkType, Target
 ```
 
 ### Maybe necessary
 
-#### `/etc/wsl.conf` (Need to be in as root `sudo -i`)
+#### `/etc/wsl.conf` (needs root, `sudo -i`)
 
 ```bash
 [automount]
@@ -117,6 +163,8 @@ options = "metadata,uid=1000,gid=1000,umask=22,fmask=111"
 
 ## 📝 Notes
 
-- Ensure you have the necessary permissions before running symlink and stow commands
-- Backup your existing configurations before applying these dotfiles
-- Update `$WslHomePath` variable if your WSL distribution or username differs
+- Back up existing configuration before stowing — `stow` refuses to overwrite
+  real files, and `--adopt` silently replaces the repo's version with yours.
+- Update `$WslHomePath` if your WSL distribution or username differs.
+- The Windows packages (`glazewm`, `zebar`, `scripts`, `wezterm`) are not
+  stowed on Linux.

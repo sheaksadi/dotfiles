@@ -591,7 +591,6 @@ local type_alias = {
 }
 
 local jsSnippets = {
-	s("fo", forof),
 	s("for", forof),
 	s("fori", fori),
 
@@ -599,7 +598,6 @@ local jsSnippets = {
 	s("if", if_body),
 	s("ife", ife),
 	s("imp", imp),
-	s("cl", cl_body),
 	s("log", cl_body),
 	s("cls", class_body),
 	s("func", func_body),

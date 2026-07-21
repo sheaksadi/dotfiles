@@ -1,0 +1,15 @@
+show=drun
+width=600
+height=400
+location=center
+prompt=Search
+allow_images=true
+image_size=28
+insensitive=true
+allow_markup=true
+no_actions=true
+matching=fuzzy
+hide_scroll=true
+term=alacritty
+key_expand=Tab
+gtk_dark=true

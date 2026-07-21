@@ -124,13 +124,23 @@ function M.setup()
 
 	-- Setup for Rust (using debug print)
 	M.setup_log_macro({
-		filetypes = { "rust" },
-		register = "l",
-		prefix = 'println!("',
-		separator = ': {:?}", ', -- Use the debug formatter {:?}
-		suffix = ");",
-		-- Macro will produce: println!("yanked_var: {:?}", yanked_var);
+	        filetypes = { "rust" },
+	        register = "l",
+	        prefix = 'println!("',
+	        separator = ': {:?}", ', -- Use the debug formatter {:?}
+	        suffix = ");",
+	        -- Macro will produce: println!("yanked_var: {:?}", yanked_var);
 	})
-end
 
-return M -- Return the module table containing the function
+	-- Setup for Java
+	M.setup_log_macro({
+	        filetypes = { "java" },
+	        register = "l",
+	        prefix = 'System.out.println("',
+	        separator = ': " + ',
+	        suffix = ");",
+	        -- Macro will produce: System.out.println("yanked_var: " + yanked_var);
+	})
+	end
+
+	return M -- Return the module table containing the function

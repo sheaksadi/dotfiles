@@ -1,0 +1,29 @@
+# Catppuccin Mocha
+
+font=JetBrainsMono Nerd Font 10
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#cba6f7
+progress-color=over #313244
+
+border-size=2
+border-radius=8
+padding=12
+margin=10
+default-timeout=5000
+max-visible=5
+anchor=top-right
+width=380
+height=140
+
+[urgency=low]
+border-color=#89b4fa
+text-color=#a6adc8
+
+[urgency=normal]
+border-color=#cba6f7
+
+[urgency=critical]
+border-color=#f38ba8
+text-color=#f38ba8
+default-timeout=0

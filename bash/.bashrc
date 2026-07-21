@@ -125,3 +125,8 @@ if [[ -z "$TMUX" ]]; then
   cd /mnt/c/users/sheak.DESKTOP-97UOPK1/
 fi
 export PATH=$PATH:/usr/local/go/bin
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/sadi/.lmstudio/bin"
+# End of LM Studio CLI section
+

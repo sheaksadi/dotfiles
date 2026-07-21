@@ -119,11 +119,12 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "snippets", "buffer", "path", "lazydev" },
+				default = { "lsp", "snippets", "buffer", "path", "lazydev", "99" },
 				per_filetype = {
 					sql = { "snippets", "dadbod", "buffer" },
 				},
 				providers = {
+					["99"] = { name = "99", module = "blink.compat.source" },
 					dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
 					lsp = { score_offset = 1 },
 					snippets = { score_offset = 2, min_keyword_length = 2 },

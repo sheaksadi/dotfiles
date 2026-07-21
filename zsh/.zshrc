@@ -267,3 +267,26 @@ export PATH="$PATH:/home/sheaksadi/.lmstudio/bin"
 export ANDROID_HOME="$HOME/Android/Sdk"
 export NDK_HOME="$ANDROID_HOME/ndk/29.0.13846066"
 export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
+
+# opencode
+export PATH=/home/sheaksadi/.opencode/bin:$PATH
+
+# bun completions
+[ -s "/home/sheaksadi/.bun/_bun" ] && source "/home/sheaksadi/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/home/sheaksadi/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/sadi/.lmstudio/bin"
+# End of LM Studio CLI section
+
