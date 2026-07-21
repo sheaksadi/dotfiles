@@ -20,6 +20,7 @@ directory is a *package* whose contents mirror `$HOME`, so
 | `fastfetch` | `~/.config/fastfetch` | Linux | System info |
 | `lazygit` | `~/.config/lazygit` | Linux | Git TUI |
 | `starship` | `~/.config/starship.toml` | Linux | Shell prompt |
+| `spotify-launcher` | `~/.config/spotify-launcher.conf` | Linux | Forces Spotify onto native Wayland (it crashes under XWayland) |
 | `zsh` | `~/.zshrc` | Linux/WSL | Shell |
 | `bash` | `~/.bashrc` | Linux/WSL | Shell |
 | `nvim` | `~/.config/nvim` | Linux/WSL | Neovim |
