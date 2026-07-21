@@ -29,18 +29,28 @@ list_section() {
     | sed -n '/^Audio$/,/^Video$/p' \
     | sed -n "/^ ├─ ${section}:/,/^ │  \$/p" \
     | grep -E '[0-9]+\.' \
-    | sed -E 's/^[^A-Za-z0-9*]*//; s/\[vol:[^]]*\]//; s/[[:space:]]+$//' \
+    | sed -E 's/^[^A-Za-z0-9*]*//; s/[[:space:]]+$//' \
     | while IFS= read -r line; do
-        local mark="  " id name
+        local mark="  " id name vol pct muted=""
         if [[ "$line" == \** ]]; then
           mark="● "
           line="${line#\*}"
           line="${line#"${line%%[![:space:]]*}"}"
         fi
+        # Pull the volume out of the trailing "[vol: 0.70]" / "[vol: 1.00 MUTED]".
+        if [[ "$line" =~ \[vol:\ ([0-9.]+)(\ MUTED)?\] ]]; then
+          vol="${BASH_REMATCH[1]}"
+          [[ -n "${BASH_REMATCH[2]:-}" ]] && muted=" muted"
+          pct=$(awk -v v="$vol" 'BEGIN{printf "%d", v*100+0.5}')
+        else
+          pct=""
+        fi
+        line="$(sed -E 's/\[vol:[^]]*\]//; s/[[:space:]]+$//' <<<"$line")"
         id="${line%%.*}"
         name="${line#*. }"
         [[ "$id" =~ ^[0-9]+$ ]] || continue
-        printf '%s%s\t%s\t%s\n' "$mark" "$kind" "$name" "$id"
+        printf '%s%s\t%s\t%s\t%s\n' \
+          "$mark" "$kind" "$(printf '%-52s %3s%%%s' "$name" "$pct" "$muted")" "$id"
       done
 }
 
