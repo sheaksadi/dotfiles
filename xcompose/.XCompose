@@ -1,0 +1,7 @@
+# Default compose sequences for the current locale.
+include "%L"
+
+# keyd emits <Cancel>-prefixed sequences for unicode output (its "Unicode
+# Support" mechanism). Without this include those sequences are undefined and
+# the raw hex digits get typed instead of the character.
+include "/usr/share/keyd/keyd.compose"
