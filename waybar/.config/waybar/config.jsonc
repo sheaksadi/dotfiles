@@ -9,17 +9,17 @@
     "hyprland/workspaces"
   ],
   "modules-center": [
-    "clock"
+    "mpris"
   ],
   "modules-right": [
-    "mpris",
     "pulseaudio#microphone",
     "tray",
     "bluetooth",
     "network",
-    "group/audio",
+    "pulseaudio",
     "cpu",
-    "battery"
+    "battery",
+    "clock"
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
@@ -63,7 +63,7 @@
       "stopped": ""
     },
     "dynamic-order": ["title", "artist"],
-    "dynamic-len": 38,
+    "dynamic-len": 60,
     "interval": 1,
     "on-click": "playerctl play-pause",
     "on-click-right": "playerctl next",
@@ -81,40 +81,24 @@
     // and an invisible module.
     "format-source": "",
     "format-source-muted": "",
-    "on-click": "~/.config/hypr/scripts/audio-menu.sh input",
+    "on-click": "pavucontrol -t 4",
     "on-click-middle": "pamixer --default-source -t",
-    "on-click-right": "pavucontrol -t 4",
+    "on-click-right": "~/.config/hypr/scripts/audio-menu.sh input",
     "on-scroll-up": "~/.config/hypr/scripts/osd.sh mic up",
     "on-scroll-down": "~/.config/hypr/scripts/osd.sh mic down",
-    "tooltip-format": "Mic {source_volume}%\nClick: pick input · Middle: mute · Right: pavucontrol"
+    "tooltip-format": "Mic {source_volume}%\nClick: sliders · Middle: mute · Right: quick pick"
   },
 
-  // Speaker + a real volume slider, revealed on hover.
-  // wofi cannot draw sliders, so this is where actual drag-to-set lives.
-  "group/audio": {
-    "orientation": "horizontal",
-    "drawer": {
-      "transition-duration": 300,
-      "children-class": "audio-child",
-      "transition-left-to-right": false
-    },
-    "modules": ["pulseaudio", "pulseaudio/slider"]
-  },
-
-  "pulseaudio/slider": {
-    "min": 0,
-    "max": 100,
-    "orientation": "horizontal"
-  },
   "cpu": {
     "interval": 5,
     "format": "󰍛",
     "on-click": "alacritty -e btop"
   },
+  // Time only. Click toggles to the full date.
   "clock": {
-    "format": "{:L%A %H:%M}",
-    "format-alt": "{:L%d %B W%V %Y}",
-    "tooltip": false
+    "format": "{:%H:%M}",
+    "format-alt": "{:L%a %d %B  %H:%M}",
+    "tooltip-format": "<tt>{calendar}</tt>"
   },
   "network": {
     "format-icons": [
@@ -172,8 +156,12 @@
       ]
     },
     "format-full": "󰂅",
-    "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
-    "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+    // Power draw in every state — the plugged/full case fell through to no
+    // tooltip at all before.
+    "tooltip-format": "{capacity}%  ·  {power:>0.1f} W\n{timeTo}",
+    "tooltip-format-discharging": "{capacity}%  ·  {power:>0.1f} W ↓\n{timeTo}",
+    "tooltip-format-charging": "{capacity}%  ·  {power:>0.1f} W ↑\n{timeTo}",
+    "tooltip-format-full": "{capacity}%  ·  {power:>0.1f} W\nFully charged",
     "interval": 5,
     "on-click": "~/.config/hypr/scripts/power-menu.sh",
     "states": {
@@ -192,10 +180,13 @@
   },
   "pulseaudio": {
     "format": "{icon}",
-    "on-click": "~/.config/hypr/scripts/audio-menu.sh output",
+    // Click opens the floating Output Devices panel, which has a volume slider
+    // per device plus set-as-default. wofi has no slider widget, so the quick
+    // text picker moves to right-click.
+    "on-click": "pavucontrol -t 3",
     "on-click-middle": "pamixer -t",
-    "on-click-right": "pavucontrol",
-    "tooltip-format": "Volume {volume}%\nClick: pick output · Middle: mute · Right: pavucontrol\nHover to reveal the slider",
+    "on-click-right": "~/.config/hypr/scripts/audio-menu.sh output",
+    "tooltip-format": "Volume {volume}%\nClick: sliders · Middle: mute · Right: quick pick",
     "on-scroll-up": "~/.config/hypr/scripts/osd.sh volume up",
     "on-scroll-down": "~/.config/hypr/scripts/osd.sh volume down",
     "format-muted": "",

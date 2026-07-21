@@ -177,26 +177,3 @@ tooltip label {
   -gtk-icon-effect: highlight;
 }
 
-/* Volume slider revealed by hovering the speaker icon. */
-#pulseaudio-slider {
-  min-width: 90px;
-  padding: 0 8px;
-}
-
-#pulseaudio-slider trough {
-  min-height: 4px;
-  border-radius: 2px;
-  background-color: @surface1;
-}
-
-#pulseaudio-slider highlight {
-  border-radius: 2px;
-  background-color: @lavender;
-}
-
-#pulseaudio-slider slider {
-  min-width: 8px;
-  min-height: 8px;
-  border-radius: 50%;
-  background-color: @lavender;
-}
