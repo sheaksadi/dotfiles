@@ -18,12 +18,26 @@ sudo keyd reload      # after editing
 **Panic sequence:** if a bad config ever leaves the keyboard unusable, press
 `Backspace + Escape + Enter` together to force keyd to terminate.
 
-### Umlauts need the compose table
+### How the umlauts work
 
-keyd's unicode output works by emitting `<Cancel>`-prefixed compose sequences,
-which are only meaningful if `/usr/share/keyd/keyd.compose` is reachable. That
-is what the `xcompose` stow package provides — without it, holding Caps and
-pressing `a` types the literal text `02s` instead of `ä`.
+keyd's built-in unicode support is deliberately **not** used. It emits
+`<Cancel>`-prefixed compose sequences, which only resolve if every application
+loads keyd's compose table — when one does not, you get the raw sequence text
+(`02s`) typed instead of `ä`.
 
-Applications read `~/.XCompose` at startup, so restart them (or relaunch the
-session) after stowing it.
+Instead the umlaut layer sends AltGr plus the key that already carries the
+character in the `us(altgr-intl)` layout (set via `kb_variant` in
+`hypr/input.conf`):
+
+| Hold Caps + | sends   | gives |
+|-------------|---------|-------|
+| `a`         | AltGr+q | ä / Ä |
+| `e`         | AltGr+r | ë / Ë |
+| `o`         | AltGr+p | ö / Ö |
+| `u`         | AltGr+y | ü / Ü |
+| `s`         | AltGr+s | ß     |
+
+Shift gives the capitals for free (level 4 of the same keys). The one exception
+is `ß`: level 4 of the `s` key is `§`, not `ẞ`, so Shift+Caps+s types `§`.
+
+This needs no compose table and takes effect immediately, with no app restart.

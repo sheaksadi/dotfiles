@@ -21,7 +21,6 @@ directory is a *package* whose contents mirror `$HOME`, so
 | `lazygit` | `~/.config/lazygit` | Linux | Git TUI |
 | `starship` | `~/.config/starship.toml` | Linux | Shell prompt |
 | `spotify-launcher` | `~/.config/spotify-launcher.conf` | Linux | Forces Spotify onto native Wayland (it crashes under XWayland) |
-| `xcompose` | `~/.XCompose` | Linux | Compose table; required for keyd's unicode output (umlauts) |
 | `zsh` | `~/.zshrc` | Linux/WSL | Shell |
 | `bash` | `~/.bashrc` | Linux/WSL | Shell |
 | `nvim` | `~/.config/nvim` | Linux/WSL | Neovim |
