@@ -12,8 +12,13 @@ and the TTY — and to every attached keyboard, not just the built-in one.
 ```bash
 sudo install -Dm644 system/etc/keyd/default.conf /etc/keyd/default.conf
 sudo systemctl enable --now keyd
-sudo keyd reload      # after editing
+sudo systemctl restart keyd   # after editing
 ```
+
+**Do not use `keyd reload`.** On keyd 2.6.0 it can segfault the daemon; the
+command still exits 0, so the service silently ends up `failed` and no
+remapping happens at all. Check with `systemctl is-active keyd` after any
+change. `systemctl restart keyd` is reliable.
 
 **Panic sequence:** if a bad config ever leaves the keyboard unusable, press
 `Backspace + Escape + Enter` together to force keyd to terminate.
