@@ -26,6 +26,8 @@ directory is a *package* whose contents mirror `$HOME`, so
 | `bash` | `~/.bashrc` | Linux/WSL | Shell |
 | `nvim` | `~/.config/nvim` | Linux/WSL | Neovim |
 | `tmux` | `~/.config/tmux` | Linux/WSL | Terminal multiplexer |
+| `herdr` | `~/.config/herdr/config.toml` | Linux/WSL | Terminal multiplexer (tmux alternative) |
+| `opencode` | `~/.config/opencode` | Linux/WSL | opencode config (`opencode.jsonc`, `tui.jsonc`) |
 | `oh-my-posh` | `~/.config/oh-my-posh` | Linux/WSL | Prompt themes |
 | `wezterm` | `~/.wezterm.lua` | Windows | Terminal |
 | `glazewm` | `~/.glzr/glazewm` | Windows | Tiling WM |

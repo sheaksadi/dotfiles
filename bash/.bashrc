@@ -130,3 +130,4 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:/home/sadi/.lmstudio/bin"
 # End of LM Studio CLI section
 
+. "$HOME/.cargo/env"

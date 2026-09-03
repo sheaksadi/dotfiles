@@ -1,0 +1,5 @@
+{
+  "plugin": [
+    "@cortexkit/opencode-magic-context@latest"
+  ]
+}

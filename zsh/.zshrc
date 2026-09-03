@@ -45,6 +45,8 @@ zstyle ':completion:*' rehash true                         # Auto-update PATH co
 
 
 # ===== PATH Configuration =====
+# Rust / Cargo
+. "$HOME/.cargo/env"
 # User binaries
 export PATH="$HOME/.local/bin:$PATH"
 # Neovim
@@ -227,22 +229,10 @@ eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/themes/M365Princess.om
 #   tmux  
 # fi
 
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-  # Find the first unattached numbered session
-  unattached_session=$(tmux list-sessions -F '#{session_name} #{session_attached}' 2>/dev/null |
-    awk '$2 == "0" && $1 ~ /^session-[0-9]+$/ {print $1; exit}')
-
-  if [ -n "$unattached_session" ]; then
-    # Attach to the first available unattached session
-    tmux attach -t "$unattached_session"
-  else
-    # No unattached sessions, create a new one with the next available number
-    session_num=0
-    while tmux has-session -t "session-$session_num" 2>/dev/null; do
-      session_num=$((session_num + 1))
-    done
-    tmux new-session -s "session-$session_num"
-  fi
+# Auto-start herdr (replaces tmux auto-start). herdr is a persistent server,
+# so `herdr` attaches to it. Skip if already inside herdr or tmux.
+if command -v herdr &> /dev/null && [ -z "$HERDR_PANE_ID" ] && [ -z "$TMUX" ]; then
+  herdr
 fi
 
 # ===== Final Setup =====
@@ -290,3 +280,7 @@ esac
 export PATH="$PATH:/home/sadi/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+# opencode
+export PATH=/home/sadi/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$HOME/.local/bin:$PATH"

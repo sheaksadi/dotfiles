@@ -1,0 +1,108 @@
+# herdr configuration
+# Translated from ~/.config/tmux/tmux.conf (tmux) for herdr v0.8.2.
+
+# Skip the first-run setup wizard (agent detection still runs automatically).
+onboarding = false
+
+[keys]
+# tmux used C-Space as the local prefix (kept C-b only over SSH).
+# herdr has no per-context prefix conditional; set it here.
+# Revert to "ctrl+b" when working over SSH if you prefer the tmux default.
+prefix = "ctrl+space"
+
+# Collapse/expand the sidebar (Spaces + Agents) with a direct ctrl+s.
+# Keep prefix+b as a fallback: ctrl+s is XOFF flow-control in some terminals,
+# so if it does nothing, the outer terminal consumed it before herdr saw it.
+toggle_sidebar = ["ctrl+s", "prefix+b"]
+
+# Vim-style pane selection (prefix h/j/k/l) + Alt-arrow direct pane switching
+# (tmux: bind h/j/k/l select-pane and bind -n M-Left/Right/Up/Down select-pane)
+focus_pane_left  = ["prefix+h", "alt+left"]
+focus_pane_down  = ["prefix+j", "alt+down"]
+focus_pane_up    = ["prefix+k", "alt+up"]
+focus_pane_right = ["prefix+l", "alt+right"]
+
+# Switch windows (tabs): Shift-arrows + Alt-Shift-h/l
+# (tmux: bind -n S-Left/S-Right previous/next-window and M-H/M-L)
+previous_tab = ["prefix+p", "shift+left", "alt+shift+h"]
+next_tab     = ["prefix+n", "shift+right", "alt+shift+l"]
+
+# Session/workspace switcher: tmux `bind C-j` (prefix + C-j) ran an fzf session picker.
+# herdr's workspace picker replaces it, bound the same way (prefix + ctrl+j).
+workspace_picker = "prefix+ctrl+j"
+
+# Splits. tmux `"` = split-window -v (stacked) and `%` = split-window -h (side by side).
+# herdr: split_horizontal = split down, split_vertical = split right.
+# `"`/`%` are not valid herdr key names, so use the herdr defaults below.
+split_horizontal = "prefix+minus"
+split_vertical   = "prefix+v"
+
+# Custom command popups (translated from the display-popup bindings).
+# tmux used `bind <key>` = prefix + <key>, so these are prefix chords
+# (press ctrl+space, then the chord). Plain ctrl+y/d/z/t are consumed by the
+# shell/outer terminal as direct chords, which is why they appeared dead.
+[[keys.command]]
+key = "prefix+ctrl+y"
+type = "popup"
+command = "lazygit"
+description = "lazygit"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "prefix+ctrl+d"
+type = "popup"
+command = "nvim -c \"DBUI\""
+description = "nvim DBUI"
+width = "90%"
+height = "90%"
+
+[[keys.command]]
+key = "prefix+ctrl+z"
+type = "popup"
+command = "nvim ~/.zshrc"
+description = "edit ~/.zshrc"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "prefix+ctrl+t"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+description = "scratch terminal"
+width = "75%"
+height = "75%"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "popup"
+command = "git branch | fzf | xargs git checkout"
+description = "git checkout (fzf)"
+
+# tmux `bind -n M-t run-shell ~/bin/toggle-pane.sh` -> detached background command
+[[keys.command]]
+key = "alt+t"
+type = "shell"
+command = "~/bin/toggle-pane.sh"
+description = "toggle pane"
+
+[terminal]
+# tmux split panes kept the current directory (-c #{pane_current_path});
+# herdr "follow" inherits the source pane/workspace by default.
+new_cwd = "follow"
+
+[theme]
+# tmux used catppuccin mocha (via powerkit). herdr's "catppuccin" is the dark mocha base.
+name = "catppuccin"
+
+[ui]
+# tmux used vi-mode copy (v selection, y copy); herdr copy mode (prefix+[) already
+# uses v/y and h/j/k/l navigation. Mouse is on by default (mouse_capture/copy_on_select).
+# Status bar: tmux used a powerkit theme; herdr's status area is empty by default.
+# Enable a tmux-style status right edge with:
+# tab_bar_right = [ { type = "hostname" }, { type = "datetime", format = "%H:%M" } ]
+
+agent_panel_sort = "spaces"
+[session]
+# tmux-resurrect/continuum -> herdr restores agent sessions on restart by default.
+resume_agents_on_restore = true
